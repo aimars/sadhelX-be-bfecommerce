@@ -1,0 +1,46 @@
+**Download semua di folder project** //PENTING sebelum running
+A. navigation
+1. npm install @react-navigation/native
+2. npm install react-native-reanimated react-native-gesture-handler react-native-screens react-native-safe-area-context @react-native-community/masked-view
+3. npm install @react-navigation/native-stack
+4. npm install @react-navigation/bottom-tabs
+
+B. cvg
+1. npm install react-native-svg
+2. npm install react-native-svg-transformer
+3. metro.convig.js
+const { getDefaultConfig } = require("metro-config");
+
+module.exports = (async () => {
+  const {
+    resolver: { sourceExts, assetExts }
+  } = await getDefaultConfig();
+  return {
+    transformer: {
+      babelTransformerPath: require.resolve("react-native-svg-transformer")
+    },
+    resolver: {
+      assetExts: assetExts.filter(ext => ext !== "svg"),
+      sourceExts: [...sourceExts, "svg"]
+    }
+  };
+})();
+
+C. responsive size
+1. npm i react-native-responsive-fontsize
+
+D. picker
+1. npm install @react-native-picker/picker --save
+
+//Kalo udah download semua baru muali start Metro & run android
+
+
+**cara menghapus cache reaksi asli** (ref: https://www.it-swarm-id.com/id/javascript/bagaimana-cara-menghapus-cache-reaksi-asli/835719870/ )
+npm> = 6.0 dan RN> = 0.50:
+
+watchman watch-del-all && rm -rf $TMPDIR/react-native-packager-cache-* &&
+rm -rf $TMPDIR/metro-bundler-cache-* && rm -rf node_modules/ && npm cache clean --force &&
+npm install && npm start -- --reset-cache
+
+
+
