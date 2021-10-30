@@ -1,0 +1,46 @@
+import React, { Component } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
+import { colors, fonts, responsiveHeight } from '../../../utils'
+import{ Jarak, Tombol } from '../../kecil'
+
+export default class HeaderComponent
+ extends Component {
+    render() {
+        return (
+            <View style={styles.container}>
+                <View style={styles.wrapperHeader}>
+                    <View style={styles.seacrhSection}>
+                        <TextInput placeholder="Search . . . ." style={styles.input} />
+                    </View>
+                    <Jarak width={10} />
+                    <Tombol icon="cart" padding={15}/>
+                </View>
+            </View>
+        )
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: colors.primary,
+        height: responsiveHeight(125),
+    },
+    wrapperHeader: {
+        marginTop: 15,
+        marginHorizontal: 30,
+        flexDirection: 'row',
+    },
+    seacrhSection: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: colors.white,
+        borderRadius: 5,
+        paddingLeft: 10,
+        alignItems: 'center',
+    },
+    input: {
+        fontSize: 16,
+        fontFamily: fonts.primary.regular,
+    }
+})
