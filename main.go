@@ -9,9 +9,56 @@ import (
 	"os"
 
 	"github.com/go-kit/kit/log"
+	_ "github.com/lib/pq"
+)
+
+const (
+	host     = "localhost"
+	port     = 5432
+	user     = "postgres"
+	password = "giansa"
+	dbname   = "CartsDatabase"
 )
 
 func main() {
+	//connection string
+	connStr := fmt.Sprintf("host = %s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	//open database
+	db, err := sql.Open("postgres", connStr)
+	CheckError(err)
+	//fmt.Println("Database Succesfully Connected")
+	//close databse
+	defer db.Close()
+
+	//check database
+	err = db.Ping()
+	CheckError(err)
+
+	fmt.Println("Database Succesfully Connected")
+
+	//getting data via select
+	query := "select * from carts"
+	rows, err := db.Query(query)
+	CheckError(err)
+	defer rows.Close()
+
+	for rows.Next() {
+		var cart_id int
+		var status string
+		var checkout_date string
+		var payment_date string
+		var user_id int
+		var transaction_code string
+		var payment_method string
+
+		err = rows.Scan(&cart_id, &status, &checkout_date, &payment_date, &user_id, &transaction_code, &payment_method)
+		CheckError(err)
+		fmt.Println(cart_id, status, checkout_date, payment_date, user_id, transaction_code, payment_method)
+
+	}
+
+	CheckError(err)
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
@@ -26,23 +73,6 @@ func main() {
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		logger.Log("listen.error", err)
 	}
-	//connection string
-	connStr := "user=pgotest dbname=CartsDatabase sslmode=verify-full"
-
-	//open database
-	db, err := sql.Open("postgres", connStr)
-
-	CheckError(err)
-
-	//close databse
-	defer db.Close()
-
-	//check database
-	err = db.Ping()
-	CheckError(err)
-
-	//if connected
-	fmt.Println("Connected")
 
 }
 

@@ -7,8 +7,3 @@ type HelloWorldRequest struct {
 type HelloWorldResponse struct {
 	MESSAGE string `json:"message"`
 }
-
-
-/*Tes komentar*/
-/* Tes Komentar*/
-
