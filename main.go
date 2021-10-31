@@ -20,6 +20,10 @@ const (
 	dbname   = "CartsDatabase"
 )
 
+func ShowAllCarts(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Hello Iam Nala")
+}
+
 func main() {
 	//connection string
 	connStr := fmt.Sprintf("host = %s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
@@ -43,26 +47,41 @@ func main() {
 	CheckError(err)
 	defer rows.Close()
 
-	for rows.Next() {
-		var cart_id int
-		var status string
-		var checkout_date string
-		var payment_date string
-		var user_id int
-		var transaction_code string
-		var payment_method string
+	http.HandleFunc("/show", func(w http.ResponseWriter, r *http.Request) {
 
-		err = rows.Scan(&cart_id, &status, &checkout_date, &payment_date, &user_id, &transaction_code, &payment_method)
-		CheckError(err)
-		fmt.Println(cart_id, status, checkout_date, payment_date, user_id, transaction_code, payment_method)
+		for rows.Next() {
+			var cart_id int
+			var status string
+			var checkout_date string
+			var payment_date string
+			var user_id int
+			var transaction_code string
+			var payment_method string
+			var total int
 
-	}
+			err = rows.Scan(&cart_id, &status, &checkout_date, &payment_date, &user_id, &transaction_code, &payment_method, &total)
+			CheckError(err)
+			//	fmt.Println(cart_id, status, checkout_date, payment_date, user_id, transaction_code, payment_method, total)
+
+			fmt.Fprintln(w, "Cart_id          : ", cart_id)
+			fmt.Fprintln(w, "Status           : ", status)
+			fmt.Fprintln(w, "Checkout date    : ", checkout_date)
+			fmt.Fprintln(w, "Payment Date     : ", payment_date)
+			fmt.Fprintln(w, "ID User          : ", user_id)
+			fmt.Fprintln(w, "Transaction Code : ", transaction_code)
+			fmt.Fprintln(w, "Payment Method   : ", payment_method)
+			fmt.Fprintln(w, "Total			  : ", total)
+		}
+
+	})
 
 	CheckError(err)
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
 	transport.RegisterHttpsServicesAndStartListener()
+
+	//show data
 
 	port := os.Getenv("PORT")
 	if port == "" {
