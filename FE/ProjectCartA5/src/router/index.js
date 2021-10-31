@@ -14,7 +14,7 @@ const Router = () => {
                 options={{headerShown: false}}
             />
             <Stack.Screen 
-                name="Cart" 
+                name="Shopping Cart" 
                 component={Cart}
             />
         </Stack.Navigator>
