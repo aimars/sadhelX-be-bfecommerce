@@ -1,7 +1,9 @@
+//untuk menampilkan list item pada laman shoppping cart
+
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import CartCard from '../../kecil/CartCard'
+import { CartCard } from '../../kecil'
 
 const ListCart = ({carts}) => {
     return (

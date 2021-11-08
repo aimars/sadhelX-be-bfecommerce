@@ -17,14 +17,14 @@ const Pilihan = ({label, datas, width, height, fontSize}) => {
                     onValueChange={(itemValue, itemIndex) =>
                         setSelectedValue(itemValue)
                     }>
-                    
+                    <Picker.Item label="--Choose--" value="" />
                     {datas.map((item, index) => {
                         return <Picker.Item label={item} value={item} key={index} />
                     })}
                 </Picker>
             </View>
         </View>
-    ) //<Picker.Item label="--Pilih--" value="" />
+    ) 
 }
 
 export default Pilihan
