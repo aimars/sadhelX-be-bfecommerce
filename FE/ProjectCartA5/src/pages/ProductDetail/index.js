@@ -1,23 +1,75 @@
 //hanya contoh untuk memasukan ke dalam keranjang
 import React, {Component} from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { colors, responsiveHeight, fonts, heightMobileUI, numberWithCommas, responsiveWidth } from '../../utils'
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import { colors, responsiveHeight, fonts, heightMobileUI, numberWithCommas, responsiveWidth, getData } from '../../utils'
 import { Inputan, Jarak, Pilihan, Tombol } from '../../components'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { connect } from 'react-redux'
+import { getDetailProduct } from '../../actions/ProductAction';
+import { masukCart } from '../../actions/CartAction';
 
 
-export default class ProductDetail extends Component {
+class ProductDetail extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             product: this.props.route.params.product,
+            jumlah: "",
+            varian: "",
+            uid: ""
         }
     }
-    
+
+    // componentDidMount() {
+    //     const { product } = this.state;
+    //     this.props.dispatch(getDetailProduct(product));
+    // }
+
+    componentDidUpdate(prevProps) {
+        const { saveCartResult } = this.props
+
+        if(saveCartResult && prevProps.saveCartResult !== saveCartResult){
+            this.props.navigation.navigation("Shopping Cart")
+        }
+    }
+
+    addToCart = () => {
+        const { jumlah, varian } = this.state;
+
+        //validasi form product
+        if(jumlah && varian) {
+            //hubungkan ke action (CartAction/masukCart)
+            this.props.dispatch(masukCart(this.state))
+
+        }else {
+            Alert.alert('Error', 'Quantity and Variant cannot be empty, please enter again..!')
+        }
+
+        // getData('user').then((res) => {
+        //     if(res) {
+        //         //simpan uid local storage ke state
+        //         this.setState({
+        //             uid: res.uid
+        //         })
+
+        //         //validasi form product
+        //         if(jumlah && varian) {
+        //             //hubungkan ke action (CartAction/masukCart)
+        //             //this.props.dispatch(masukCart(this.state))
+        //         }else {
+        //             Alert.alert('Error', 'Jumlah dan Varian Harus diisi..!')
+        //         }
+        //     }else {
+        //         Alert.alert('Error', 'Silahkan Login Terlebih Dahulu')
+        //         //this.props.navigation.replace('login') //untuk mengembalikan ke halan login
+        //     }
+        // })
+    }
+
     render() {
-        const { navigation } = this.props;
-        const { product } = this.state
+        const { navigation, saveCartLoading } = this.props;
+        const { product, jumlah, varian } = this.state;
         return (
         <View style={styles.page}>
             <View style={styles.button}>
@@ -28,7 +80,7 @@ export default class ProductDetail extends Component {
                 <View style={styles.desc}>
                     <Text style={styles.nama}>{product.nama}</Text>
                     <Text style={styles.text}>Price : Rp. {numberWithCommas(product.harga)}</Text>
-                    <Text style={styles.text}>Stock : {product.stok}</Text>
+                    <Text style={styles.text}>Stock : </Text>
 
                     <View style={styles.wrapperInput}>
                         <Inputan 
@@ -36,13 +88,18 @@ export default class ProductDetail extends Component {
                             width={responsiveWidth(166)} 
                             height={responsiveHeight(33)}
                             fontSize={13}
+                            value={jumlah}
+                            onChangeText={(jumlah) => this.setState({jumlah})}
+                            keyboardType="number-pad"
                         />
                         <Pilihan 
-                            label="Color"
+                            label="Variant"
                             width={responsiveWidth(350)} 
                             height={responsiveHeight(45)}
                             fontSize={13}
-                            datas={product.warna}
+                            datas={product.varian}
+                            selectedValue={varian}
+                            onValueChange={(varian) => this.setState({varian})}
                         />
                     </View>
                     <Jarak height={180}/>
@@ -51,6 +108,8 @@ export default class ProductDetail extends Component {
                         type="text"
                         padding={responsiveHeight(17)}
                         fontSize={18}
+                        onPress={() => this.addToCart()}
+                        loading={saveCartLoading}
                     />
                 </View>
             </View>
@@ -58,6 +117,15 @@ export default class ProductDetail extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    //getDetailProductResult: state.ProductReducer.getDetailProductResult
+    saveCartLoading: state.CartReducer.saveCartLoading,
+    saveCartResult: state.CartReducer.saveCartResult,
+    saveCartError: state.CartReducer.saveCartError,
+})
+
+export default connect(mapStateToProps, null)(ProductDetail)
 
 const styles = StyleSheet.create({
     page: {

@@ -3,19 +3,11 @@ import React, { Component } from 'react'
 import { StyleSheet, View, Text, ScrollView } from 'react-native'
 import HeaderComponent from '../../components/besar/HeaderComponent'
 import { colors, fonts } from '../../utils'
-import { Jarak, ListProduct } from '../../components'
-import { dummyProducts } from '../../data'
+import { ListProduct } from '../../components'
 import { getListProduct } from '../../actions/ProductAction'
 import { connect } from 'react-redux'
 
 class Home extends Component {
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-             products: dummyProducts
-        };
-    }
 
     componentDidMount() {
         this._unsubscribe = this.props.navigation.addListener('focus', () => {
@@ -28,7 +20,6 @@ class Home extends Component {
     }
     
     render() {
-        const { products } = this.state;
         const { navigation } = this.props;
         return (
             <View style={styles.page}>
@@ -36,7 +27,7 @@ class Home extends Component {
                     <HeaderComponent navigation={navigation}/>
                     <View style={styles.pilihProduct}>
                         <Text style={styles.label}>Pilih Product</Text>
-                        <ListProduct products={products} navigation={navigation}/>
+                        <ListProduct navigation={navigation}/>
                     </View>
                 </ScrollView>
                 

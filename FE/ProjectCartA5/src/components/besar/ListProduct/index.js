@@ -1,22 +1,38 @@
 //hanya contoh untuk menampilkan list product yang akan ditambahkan pada keranjang
 
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { connect } from 'react-redux'
+import { colors } from '../../../utils'
 import { CardProducts } from '../../kecil'
 
-const ListProduct = ({products, navigation}) => {
+const ListProduct = ({getListProductLoading, getListProductResult, getListProductError, navigation}) => {
     return (
         <View style={styles.container}>
-            {/*products.map((product) => {
-                return (
-                    <CardProducts key={product.id} product={product} navigation={navigation}/>
-                )
-            })*/}
+            {getListProductResult ? (
+                Object.keys(getListProductResult).map((key) => {
+                    return (<CardProducts key={key} product={getListProductResult[key]} navigation={navigation}/>);
+                })
+            ) : getListProductLoading ? (
+                <View style={styles.loading}>
+                    <ActivityIndicator color={colors.primary}/>
+                </View>
+            ) : getListProductError ? (
+                <Text>{getListProductError}</Text>
+            ) : (
+                <Text>Data Kosong</Text>
+            )}
         </View>
     )
 }
 
-export default ListProduct
+const mapStateToProps = (state) => ({
+    getListProductLoading: state.ProductReducer.getListProductLoading,
+    getListProductResult: state.ProductReducer.getListProductResult,
+    getListProductError: state.ProductReducer.getListProductError
+})
+
+export default connect(mapStateToProps , null)(ListProduct)
 
 const styles = StyleSheet.create({
     container: {
@@ -24,5 +40,10 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'space-between',
         marginTop: 10,
+    },
+    loading: {
+        flex: 1,
+        marginTop: 10,
+        marginBottom: 30
     }
 })

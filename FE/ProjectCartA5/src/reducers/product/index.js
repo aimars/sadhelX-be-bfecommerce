@@ -1,9 +1,14 @@
-import { GET_LIST_PRODUCT } from '../../actions/ProductAction'
+//contoh action untuk product
+import { GET_LIST_PRODUCT, GET_DETAIL_PRODUCT } from '../../actions/ProductAction'
 
 const initialState = {
     getListProductLoading: false,
     getListProductResult: false,
     getListProductError: false,
+
+    getDetailProductLoading: false,
+    getDetailProducttResult: false,
+    getDetailProductError: false,
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +19,13 @@ export default function (state = initialState, action) {
                 getListProductLoading: action.payload.loading,
                 getListProductResult: action.payload.data,
                 getListProductError: action.payload.errorMassage,
+            };
+        case GET_DETAIL_PRODUCT:
+            return{
+                ...state,
+                getDetailProductLoading: action.payload.loading,
+                getDetailProductResult: action.payload.data,
+                getDetailProductError: action.payload.errorMassage,
             };
         default:
             return state;
