@@ -1,3 +1,5 @@
+//contoh tampilan home awal, untuk icon cart
+
 import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'

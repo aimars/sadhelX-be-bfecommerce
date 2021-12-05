@@ -1,35 +1,34 @@
+//component tiap item
+
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { Jarak, Pilihan } from '../../kecil'
 import { IconRemove } from '../../../assets'
 import { colors, fonts, numberWithCommas, responsiveHeight, responsiveWidth } from '../../../utils'
-import {  } from 'react-native-gesture-handler'
+import Inputan from '../Inputan'
 
 const CartCard = ({cart}) => {
-    this.state = {
-        quantity: [cart.jumlahPesan],
-        warna: [cart.warna],
-    };
-
-    const {quantity, warna} = this.state; 
 
     return (
         <View style={styles.container}>
             <Image source={cart.product.gambar[0]} style={styles.gambar}/>
-            <View style={styles.desc}>
+            <View>
                 <Text style={styles.nama}>{cart.product.nama}</Text>
                 <Text style={styles.text}>Rp. {numberWithCommas(cart.product.harga)}</Text>
                 <Text style={styles.text}>Stock : {cart.product.stok}</Text>
                 <Jarak height={14} />
-                <Text style={styles.textBold}>Quantity : {quantity}</Text>
 
-                <View style={styles.wrapperPilihan}>
+                <Text style={styles.text}>Quantity : {cart.jumlahPesan}</Text>
+                <Text style={styles.text}>Color : {cart.warna}</Text>
+
+                <View >
+                    <Inputan label="Quantity" value={cart.jumlahPesan}/>
                     <Pilihan 
-                        label="Warna" 
+                        label="Color" 
                         width={responsiveWidth(166)}
                         height={responsiveHeight(43)} 
                         fontSize={14} 
-                        datas={warna}
+                        datas={cart.product.warna}
                     />
                 </View>
             </View>

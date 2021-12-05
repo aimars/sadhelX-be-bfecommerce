@@ -11,10 +11,12 @@ export default class Cart extends Component {
 
         this.state = {
             pesanan: dummyPesanans[0]
+
         }
     }
 
     render() {
+        //console.log("Parameter : ", this.props.route.params);
         const { pesanan } = this.state
         return (
             <View style={styles.page}>
