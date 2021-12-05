@@ -1,0 +1,52 @@
+{
+  "products" : {
+    "-MKQAIIU1ZQIL5ZHEqFE" : {
+      "berat" : "0.50",
+      "gambar" : [ "gambar1.jpg"],
+      "harga" : "199000",
+      "stok" : "125",
+      "toko" : "-MKKtTxsG58wrXrDIrAV",
+      "nama" : "Rockbros WT-09",
+      "ready" : true,
+      "varian" : [ "Red", "Blue", "White", "Black" ]
+    },
+    "-MKQARaiDnX5T4EsfneX" : {
+      "berat" : "0.50",
+      "gambar" : [ "gambar1.jpg"],
+      "harga" : "199000",
+      "stok" : "0",
+      "toko" : "-MKKtTxsG58wrXrDIrAV",
+      "nama" : "Rockbros Bike",
+      "ready" : "false",
+      "varian" : [ "Red", "Blue", "White", "Black" ]
+    },
+    "-MKZQdJadnKhlX0jAHT8" : {
+      "berat" : "0.50",
+      "gambar" : [ "gambar1.jpg"],
+      "harga" : "199000",
+      "stok" : "530",
+      "toko" : "-MKKtTxsG58wrXrDIrAV",
+      "nama" : "Rockbros WT-08",
+      "ready" : true,
+      "varian" : [ "Black" ]
+    },
+    "-MKiO-Q8bVkkL51g-YH3" : {
+      "berat" : "0.50",
+      "gambar" : [ "gambar1.jpg"],
+      "harga" : "199000",
+      "stok" : "84",
+      "toko" : "-MKKwigoURfIh8-l1jie",
+      "nama" : "Rockbros MT-500",
+      "ready" : true,
+      "varian" : [ "Red", "Blue", "White", "Black" ]
+    }
+  },
+  "stores" : {
+    "-MKKtTxsG58wrXrDIrAV" : {
+      "namaToko" : "UTY Store"
+    },
+    "-MKKwigoURfIh8-l1jie" : {
+      "namaToko" : "Miisoo Oficiall Shop"
+    }
+  }
+}

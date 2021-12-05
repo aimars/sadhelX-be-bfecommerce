@@ -7,11 +7,11 @@ import { CardProducts } from '../../kecil'
 const ListProduct = ({products, navigation}) => {
     return (
         <View style={styles.container}>
-            {products.map((product) => {
+            {/*products.map((product) => {
                 return (
                     <CardProducts key={product.id} product={product} navigation={navigation}/>
                 )
-            })}
+            })*/}
         </View>
     )
 }

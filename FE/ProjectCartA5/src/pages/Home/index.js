@@ -5,14 +5,26 @@ import HeaderComponent from '../../components/besar/HeaderComponent'
 import { colors, fonts } from '../../utils'
 import { Jarak, ListProduct } from '../../components'
 import { dummyProducts } from '../../data'
+import { getListProduct } from '../../actions/ProductAction'
+import { connect } from 'react-redux'
 
-export default class Home extends Component {
+class Home extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
              products: dummyProducts
         };
+    }
+
+    componentDidMount() {
+        this._unsubscribe = this.props.navigation.addListener('focus', () => {
+            this.props.dispatch(getListProduct());
+        });
+    }
+
+    componentWillUnmount() {
+        this._unsubscribe();
     }
     
     render() {
@@ -32,6 +44,8 @@ export default class Home extends Component {
         );
     }
 }
+
+export default connect()(Home)
 
 const styles = StyleSheet.create({
     page: { flex: 1, backgroundColor: colors.white },

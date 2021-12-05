@@ -18,6 +18,9 @@ const CartCard = ({cart}) => {
                 <Text style={styles.text}>Stock : {cart.product.stok}</Text>
                 <Jarak height={14} />
 
+                <Text style={styles.text}>Quantity : {cart.jumlahPesan}</Text>
+                <Text style={styles.text}>Color : {cart.warna}</Text>
+
                 <View >
                     <Inputan label="Quantity" value={cart.jumlahPesan}/>
                     <Pilihan 
