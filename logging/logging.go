@@ -11,6 +11,8 @@ func GetDateTimeNowInString() string {
 	return t.Format("2006-01-02 15:04:05")
 }
 
+
+
 const LOG_PREFIX_LOG string = "LOG"
 const ERROR_PREFIX_LOG string = "ERR"
 const DEBUG_PREFIX_LOG string = "DEBUG"

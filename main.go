@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/go-kit/kit/log"
+
 	_ "github.com/lib/pq"
 )
 
@@ -41,41 +42,10 @@ func main() {
 
 	fmt.Println("Database Succesfully Connected")
 
-	//getting data via select
-	query := "select * from carts"
-	rows, err := db.Query(query)
-	CheckError(err)
-	defer rows.Close()
-
-	http.HandleFunc("/show", func(w http.ResponseWriter, r *http.Request) {
-
-		for rows.Next() {
-			var cart_id int
-			var status string
-			var checkout_date string
-			var payment_date string
-			var user_id int
-			var transaction_code string
-			var payment_method string
-			var total int
-
-			err = rows.Scan(&cart_id, &status, &checkout_date, &payment_date, &user_id, &transaction_code, &payment_method, &total)
-			CheckError(err)
-			//	fmt.Println(cart_id, status, checkout_date, payment_date, user_id, transaction_code, payment_method, total)
-
-			fmt.Fprintln(w, "Cart_id          : ", cart_id)
-			fmt.Fprintln(w, "Status           : ", status)
-			fmt.Fprintln(w, "Checkout date    : ", checkout_date)
-			fmt.Fprintln(w, "Payment Date     : ", payment_date)
-			fmt.Fprintln(w, "ID User          : ", user_id)
-			fmt.Fprintln(w, "Transaction Code : ", transaction_code)
-			fmt.Fprintln(w, "Payment Method   : ", payment_method)
-			fmt.Fprintln(w, "Total			  : ", total)
-		}
-
-	})
-
-	CheckError(err)
+	/*Endpoint*/
+	http.HandleFunc("/show", transport.ShowCarts)
+	http.HandleFunc("/insert/cart", transport.PostCart)
+	http.HandleFunc("/getproduk", transport.GetDataProduk)
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
