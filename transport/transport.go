@@ -181,55 +181,7 @@ func ConnDB() (*sql.DB, error) {
 	return db, nil
 }
 
-func Delete(ctx context.Context, cart datastruct.CartsFields) error {
-	db, err := ConnDB()
 
-	if err != nil {
-		fmt.Sprintf("cant connect to database")
-	}
-
-	queryText := fmt.Sprintf("delete from carts where cart_id = '%d'", cart.Cart_Id)
-
-	s, err := db.ExecContext(ctx, queryText)
-
-	if err != nil && err != sql.ErrNoRows {
-		return err
-	}
-
-	check, err := s.RowsAffected()
-	fmt.Println(check)
-	if check == 0 {
-		return errors.New("id tidak ada")
-	}
-	return nil
-}
-
-func DeleteMahasiswa(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "DELETE" {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		var cart datastruct.CartsFields
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
-			return
-		}
-		cart.Cart_Id, _ = strconv.Atoi(id)
-
-		if err := Delete(ctx, cart); err != nil {
-			kesalahan := map[string]string{
-				"error": fmt.Sprintf("%v", err),
-			}
-			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
-			return
-		}
-
-		http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
-		return
-
-	}
-}
 
 func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
