@@ -12,6 +12,7 @@ import {
       tanggalPemesanan: 'Jumat, 18 Oktober 2021',
       status: 'keranjang',
       totalHarga: 597000,
+      berat: 1.50,
       pesanans: [
         {
           id: 1,
@@ -24,6 +25,7 @@ import {
               nama: 'UTY Store',
             },
             harga: 199000,
+            berat: 0.50,
             stok: 125,
             warna: ["Red", "Blue", "White", "Black"],
             ready: true
@@ -43,6 +45,7 @@ import {
               nama: 'Miisoo Oficiall Shop',
             },
             harga: 199000,
+            berat: 0.50,
             stok: 84,
             warna: ["Red", "Blue", "White", "Black"],
             ready: true
@@ -58,6 +61,7 @@ import {
       tanggalPemesanan: 'Jumat, 1 September 2021',
       status: 'lunas',
       totalHarga: 398000,
+      berat: 1,
       pesanans: [
         {
           id: 1,
@@ -70,6 +74,7 @@ import {
               nama: 'UTY Store',
             },
             harga: 199000,
+            berat: 0.50,
             stok: 23,
             warna: ["Red", "Blue", "White", "Black"],
             ready: true
@@ -89,6 +94,7 @@ import {
               nama: 'UTY Store',
             },
             harga: 199000,
+            berat: 0.50,
             stok: 530,
             warna: ["Black"],
             ready: true

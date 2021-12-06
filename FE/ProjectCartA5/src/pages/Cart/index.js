@@ -26,7 +26,12 @@ export default class Cart extends Component {
                         <Text style={styles.textBold}>Sub Total :</Text>
                         <Text style={styles.textBold}>Rp. {numberWithCommas(pesanan.totalHarga)}</Text>
                     </View>
-                    <Tombol title="Check Out" type="text" padding={responsiveHeight(15)}/>
+                    <Tombol 
+                        title="Check Out" 
+                        type="text" 
+                        padding={responsiveHeight(15)}
+                        onPress={() => this.props.navigation.navigate('Check Out')}
+                    />
                 </View>
             </View>
         )

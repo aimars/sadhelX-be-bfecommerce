@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         fontSize: fontSize ? fontSize : 14,
         fontFamily: fonts.primary.regular,
         width: width,
-        height: height ? height : responsiveHeight(35),
+        height: height ? height : responsiveHeight(45),
         marginTop: -10,
         marginBottom: 5,
     }),
