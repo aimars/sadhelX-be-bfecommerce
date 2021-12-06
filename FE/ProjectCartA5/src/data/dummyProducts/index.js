@@ -17,6 +17,7 @@ export const dummyProducts = [
             nama: 'UTY Store',
         },
         harga: 199000,
+        berat: 0.50,
         stok: 125,
         warna: ["Red", "Blue", "White", "Black"],
         ready: true
@@ -30,6 +31,7 @@ export const dummyProducts = [
             nama: 'UTY Store',
         },
         harga: 199000,
+        berat: 0.50,
         stok: 23,
         warna: ["Red", "Blue", "White", "Black"],
         ready: true
@@ -43,6 +45,7 @@ export const dummyProducts = [
             nama: 'UTY Store',
         },
         harga: 199000,
+        berat: 0.50,
         stok: 530,
         warna: ["Black"],
         ready: true
@@ -56,6 +59,7 @@ export const dummyProducts = [
             nama: 'Miisoo Oficiall Shop',
         },
         harga: 199000,
+        berat: 0.50,
         stok: 84,
         warna: ["Red", "Blue", "White", "Black"],
         ready: true

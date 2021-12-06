@@ -17,6 +17,7 @@ const Tombol = (props) => {
     }
 
     const {icon, totalCart, padding, type, onPress} = props;
+    
     if(type === "text") {
         return <TextOnly {...props} />
     }
