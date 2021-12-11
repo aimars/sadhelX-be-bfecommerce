@@ -181,7 +181,55 @@ func ConnDB() (*sql.DB, error) {
 	return db, nil
 }
 
+func Delete(ctx context.Context, cart datastruct.CartsFields) error {
+	db, err := ConnDB()
 
+	if err != nil {
+		fmt.Sprintf("cant connect to database")
+	}
+
+	queryText := fmt.Sprintf("delete from carts where cart_id = '%d'", cart.Cart_Id)
+
+	s, err := db.ExecContext(ctx, queryText)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	check, err := s.RowsAffected()
+	fmt.Println(check)
+	if check == 0 {
+		return errors.New("id tidak ada")
+	}
+	return nil
+}
+
+func DeleteMahasiswa(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "DELETE" {
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		var cart datastruct.CartsFields
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+		cart.Cart_Id, _ = strconv.Atoi(id)
+
+		if err := Delete(ctx, cart); err != nil {
+			kesalahan := map[string]string{
+				"error": fmt.Sprintf("%v", err),
+			}
+			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
+			return
+		}
+
+		http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+		return
+
+	}
+}
 
 func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -336,39 +384,61 @@ func GetDataProduk(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(resp.Text())
 
-	// var product interface{}
-	// resp, err := http.Get("https://617e57972ff7e600174bd77c.mockapi.io/api/carts/Carts/:id/products")
-	// if err != nil {
-	// 	fmt.Printf("Terjadi kesalahan pada endpoint")
-	// } else {
-	// 	data, _ := ioutil.ReadAll(resp.Body)
-	// 	//product := data
-	// 	fmt.Println(string(data))
-	// }
-
-	// var ResponseObject Response
-
-	// req := curl.NewRequest()
-	// req.Method = "GET"
-	// resp, err := req.Do()
-	// if err != nil {
-	// 	fmt.Print("error")
-	// }
-	// fmt.Println(resp.Text())
-
 }
 
-// queryText := fmt.Sprintf("INSERT into order_items (oritem_id,cart_id,product_id,qty,color,psize)
-// VALUES (nextval('seqorderid'),'%v',%v,'%v','%v','%v')",
-// 	ortem.Oritem_id,
-// 	ortem.Cart_Id,
-// 	ortem.Product_Id,
-// 	ortem.Qty,
-// 	ortem.Color,
-// 	ortem.Psize)
+func AddProductToCart(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
 
-// _, err = db.ExecContext(ctx, queryText)
+		if r.Header.Get("Content-Type") != "application/json" {
+			http.Error(w, "Gunakan content type application / json", http.StatusBadRequest)
+			return
+		}
 
-// if err != nil && err != sql.ErrNoRows {
-// 	return err
-// }
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		var mixco datastruct.MixCartOrder
+
+		if err := json.NewDecoder(r.Body).Decode(&mixco); err != nil {
+			ResponseJSON(w, err, http.StatusBadRequest)
+			return
+		}
+
+		//	, order_item
+		if err := InsertPorductToCart(ctx, mixco); err != nil {
+			ResponseJSON(w, err, http.StatusInternalServerError)
+			return
+		}
+
+		res := map[string]string{
+			"status": "Succesfully",
+		}
+
+		ResponseJSON(w, res, http.StatusCreated)
+
+		return
+	}
+
+	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+	return
+}
+
+func InsertPorductToCart(ctx context.Context, mixco datastruct.MixCartOrder) error {
+	//, ortem datastruct.OrderItemsFields
+	db, err := ConnDB()
+
+	if err != nil {
+		fmt.Printf("cannot connect db")
+	}
+	/*%v bisa untuk segala jenis data*/
+
+	query := fmt.Sprintf("call actionfirst_insert_product(%v,%v,'%v','%v',%v,%v)", mixco.Product_Id, mixco.Qty, mixco.Color, mixco.Psize, mixco.Store, mixco.User_Id)
+
+	_, err = db.ExecContext(ctx, query)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	return nil
+}
