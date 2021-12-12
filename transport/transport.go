@@ -386,6 +386,7 @@ func GetDataProduk(w http.ResponseWriter, r *http.Request) {
 
 }
 
+/*MEMASUKKAN ITEM KEDALAM CART*/
 func AddProductToCart(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
@@ -442,3 +443,74 @@ func InsertPorductToCart(ctx context.Context, mixco datastruct.MixCartOrder) err
 
 	return nil
 }
+
+/*MENGHAPUS PER-PRODUCT DARI CARTS*/
+
+/*MENGHAPUS  PER-CARTSCART*/
+func DelCartsReq(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "DELETE" {
+
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		var cartdel datastruct.MixCartOrder
+
+		id_cart := r.URL.Query().Get("id_cart")
+
+		if id_cart == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+		cartdel.Cart_Id, _ = strconv.Atoi(id_cart)
+
+		if err := DeleteCart(ctx, cartdel); err != nil {
+
+			kesalahan := map[string]string{
+				"error": fmt.Sprintf("%v", err),
+			}
+
+			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
+			return
+		}
+
+		res := map[string]string{
+			"status": "Succesfully",
+		}
+
+		ResponseJSON(w, res, http.StatusOK)
+		return
+	}
+
+	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+	return
+}
+
+func DeleteCart(ctx context.Context, cartdel datastruct.MixCartOrder) error {
+
+	db, err := ConnDB()
+
+	if err != nil {
+		log.Fatal("Can't connect to database", err)
+	}
+
+	queryText := fmt.Sprintf("call delete_percart('%d')", cartdel.Cart_Id)
+
+	s, err := db.ExecContext(ctx, queryText)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	check, err := s.RowsAffected()
+
+	if check == 0 {
+		return errors.New("id tidak ada ")
+	}
+
+	return nil
+}
+
+/*MENGHAPUS PER ITEM PRODUCT*/
+
+/*Update varian warna*/

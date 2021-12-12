@@ -47,9 +47,14 @@ func main() {
 	http.HandleFunc("/insert/cart", transport.PostCart)
 	http.HandleFunc("/getproduk", transport.GetDataProduk)
 	//	http.HandleFunc("/insert/cart", transport.PostCart)
+
 	/*MENAMBAHKAN PRODUCT KE DALAM CART*/
 	http.HandleFunc("/insert/producttocart", transport.AddProductToCart)
 
+	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
+
+	/*DELETE PER CARTS*/
+	http.HandleFunc("/cart/delete", transport.DelCartsReq)
 	logger := log.NewLogfmtLogger(os.Stdout)
 
 	transport.RegisterHttpsServicesAndStartListener()

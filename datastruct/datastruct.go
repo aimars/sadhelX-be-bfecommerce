@@ -30,6 +30,7 @@ type OrderItemsFields struct {
 	Color      string `json : "color"`
 	Psize      string `json : "psize"`
 	Store      int    `json : store_id`
+	User_Id    int    `json : "user_id"`
 }
 
 type MixCartOrder struct {
@@ -46,4 +47,14 @@ type MixCartOrder struct {
 	User_Id          int    `json : "user_id"`
 	Transaction_Code int    `json :"transaction_code"`
 	Payment_Method   string `json : "payment_method"`
+}
+
+type ShowCarts struct {
+	Cart_Id    int    `json : "id_cart"`
+	User_Id    int    `json : "user_id"`
+	Product_Id int    `json : "product_id"`
+	Qty        int    `json : "qty"`
+	Color      string `json : "color"`
+	Psize      string `json : "psize"`
+	Store      int    `json : store_id`
 }
