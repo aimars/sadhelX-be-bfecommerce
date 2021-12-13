@@ -15,9 +15,9 @@ class ProductDetail extends Component {
 
         this.state = {
             product: this.props.route.params.product,
-            jumlah: "",
-            varian: "",
-            uid: ""
+            jumlah: '',
+            varian: '',
+            uid: '',
         }
     }
 
@@ -30,41 +30,32 @@ class ProductDetail extends Component {
         const { saveCartResult } = this.props
 
         if(saveCartResult && prevProps.saveCartResult !== saveCartResult){
-            this.props.navigation.navigation("Shopping Cart")
+            this.props.navigation.navigate("Shopping Cart")
         }
     }
 
     addToCart = () => {
         const { jumlah, varian } = this.state;
 
-        //validasi form product
-        if(jumlah && varian) {
-            //hubungkan ke action (CartAction/masukCart)
-            this.props.dispatch(masukCart(this.state))
+        getData('user').then((res) => {
+            if(res) {
+                //ambil user uid simpan uid local storage ke state
+                this.setState({
+                    uid: res.uid
+                })
 
-        }else {
-            Alert.alert('Error', 'Quantity and Variant cannot be empty, please enter again..!')
-        }
-
-        // getData('user').then((res) => {
-        //     if(res) {
-        //         //simpan uid local storage ke state
-        //         this.setState({
-        //             uid: res.uid
-        //         })
-
-        //         //validasi form product
-        //         if(jumlah && varian) {
-        //             //hubungkan ke action (CartAction/masukCart)
-        //             //this.props.dispatch(masukCart(this.state))
-        //         }else {
-        //             Alert.alert('Error', 'Jumlah dan Varian Harus diisi..!')
-        //         }
-        //     }else {
-        //         Alert.alert('Error', 'Silahkan Login Terlebih Dahulu')
-        //         //this.props.navigation.replace('login') //untuk mengembalikan ke halan login
-        //     }
-        // })
+                //validasi form product
+                if(jumlah && varian) {
+                    //hubungkan ke action (CartAction/masukCart)
+                    this.props.dispatch(masukCart(this.state));
+                }else {
+                    Alert.alert('Error', 'Quantity and Variant cannot be empty, please enter again..!');
+                }
+            } else {
+                Alert.alert('Error', 'Silahkan Login Terlebih Dahulu');
+                //this.props.navigation.replace('login') //untuk mengembalikan ke halaman login
+            }
+        })
     }
 
     render() {
@@ -80,7 +71,7 @@ class ProductDetail extends Component {
                 <View style={styles.desc}>
                     <Text style={styles.nama}>{product.nama}</Text>
                     <Text style={styles.text}>Price : Rp. {numberWithCommas(product.harga)}</Text>
-                    <Text style={styles.text}>Stock : </Text>
+                    <Text style={styles.text}>Stock : {product.stok}</Text>
 
                     <View style={styles.wrapperInput}>
                         <Inputan 
@@ -109,7 +100,7 @@ class ProductDetail extends Component {
                         padding={responsiveHeight(17)}
                         fontSize={18}
                         onPress={() => this.addToCart()}
-                        loading={saveCartLoading}
+                        //loading={saveCartLoading}
                     />
                 </View>
             </View>

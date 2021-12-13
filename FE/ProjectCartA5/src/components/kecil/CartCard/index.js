@@ -19,12 +19,12 @@ const CartCard = ({cart}) => {
                 <Jarak height={14} />
 
                 <Text style={styles.text}>Quantity : {cart.jumlahPesan}</Text>
-                <Text style={styles.text}>Color : {cart.warna}</Text>
+                <Text style={styles.text}>Variant : {cart.warna}</Text>
 
                 <View >
                     <Inputan label="Quantity" value={cart.jumlahPesan}/>
                     <Pilihan 
-                        label="Color" 
+                        label="Variant" 
                         width={responsiveWidth(166)}
                         height={responsiveHeight(43)} 
                         fontSize={14} 
