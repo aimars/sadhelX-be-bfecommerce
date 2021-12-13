@@ -5,32 +5,32 @@ import (
 	"log"
 
 	"github.com/go-kit/kit/log"
+
+	"sadhelx-be-bfecommerce/datastruct"
 )
 
 type(
 	Service interface{
-		addCart(ctx context.Context,id int, quantity int,variant string) (string, error)
+		AddCart(ctx context.Context, cart datastruct.OrderItem) (*datastruct.OrderItem, error)
+		EditCart(ctx context.Context, productID int, quantity int ) error
+		getAllCartByCartID(ctx context.Context, cartID int) (*datastruct.ShoppingCart)
 	}
-	service  struct{
-		repository datastruct.DBrepository
+
+	service struct{
+		repository datastruct.DBRepository
 		logger log.Logger
 	}
 )
 
-func NewService(repo datastruct.AddCartRepository, logger log.Logger) Service{
+func NewService(repo datastruct.DBRepository, logger log.Logger) Service{
 	return &service{
 		repository: repo,
 		logger: log.With(logger, "repo", "service"),
 	}
 }
 
-func (s *service) AddCart(ctx context.Context,id int, quantity int, variant string) (string,error){
-	logger := log.With(s.logger, "method", "AddCart")
-	if err := s.repository.AddCart(ctx,); err != nil{
-		level.Error(logger).Log("err",err)
-		return "", err
-	}
+func (s *service) AddCart(ctx context.Context, cart datastruct.DBRepository) (*datastruct.DBRepository, error){
+	cartExist, err := s.repository.cartIsExist(ctx, cart.product_id)
+	
 
-	logger.Log("create user",id)
-	return "Success",nil
 }

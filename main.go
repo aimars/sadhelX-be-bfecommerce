@@ -3,6 +3,7 @@ package main
 import (
 	"aph-go-service/transport"
 	"database/sql"
+	"encoding/json"
 	_ "expvar"
 	"fmt"
 	"net/http"
@@ -12,6 +13,11 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Cart struct {
+	Name string `json:"name"`
+	Nickname string `json:"nickname"`
+	}
+
 const (
 	host     = "localhost"
 	port     = 5432
@@ -19,6 +25,27 @@ const (
 	password = "giansa"
 	dbname   = "CartsDatabase"
 )
+
+func OpenConnection() *sql.DB{
+	connStr := fmt.Sprintf("host = %s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	db, err := sql.Open("postgres", connStr)
+	CheckError(err)
+
+	err = db.Ping()
+	CheckError(err)
+
+	return db
+}
+
+func POSTHandler(w http.ResponseWriter, r *http.Request){
+	db := OpenConnection()
+
+	err := json.NewDecoder(r.body).Decode(&p)
+
+	if err != nil{
+		http
+	}
+}
 
 func ShowAllCarts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Hello Iam Nala")
