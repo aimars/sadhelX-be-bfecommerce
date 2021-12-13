@@ -309,6 +309,53 @@ func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 	return carts, nil
 }
 
+
+func GetCartByUser(ctx context.Context, idUser int) ([]*datastruct.CartsFields,error){
+	db, err := ConnDB()
+	if  err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	sqlStatement := ("SELECT * FROM carts WHERE User_Id=?;`")
+	all_carts, err := db.Query(sqlStatement,idUser)
+	if err != nil {
+		return nil, err
+	}
+	var carts []*datastruct.CartsFields
+	sqlStatement = ("SELECT * FROM carts WHERE Cart_Id=?;`")
+	for all_carts.Next() {
+		var Cart_Id          int
+		all_carts.Scan(&Cart_Id)
+		row := db.QueryRow(sqlStatement, Cart_Id)
+		var id_cart 		int
+		var status           string 
+		var tanggalCheckout    string 
+		var tanggalPayment     string
+		var id_user         int 
+		var codeTransaction int    
+		var paymentMethod   string
+		row.Scan(&id_cart,
+			&status,
+			&tanggalCheckout,
+			&tanggalPayment,
+			&id_user,
+			&codeTransaction,
+			&paymentMethod)
+		carts = append(carts, &datastruct.CartsFields{
+			Cart_Id          : Cart_Id,
+			Status           : status,
+			Checkout_Date    : tanggalCheckout,
+			Payment_Date     : tanggalPayment,
+			User_Id          : id_user,
+			Transaction_Code : codeTransaction,
+			Payment_Method   : paymentMethod,
+		})
+	}
+
+	return carts,nil
+}
+
 /*Insert to Cart and Order Items*/
 // PostMahasiswa
 func PostCart(w http.ResponseWriter, r *http.Request) {
