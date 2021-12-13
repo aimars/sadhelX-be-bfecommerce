@@ -1,9 +1,13 @@
-import { MASUK_CART } from '../../actions/CartAction'
+import { MASUK_CART, GET_LIST_CART } from '../../actions/CartAction'
 
 const initialState = {
     saveCartLoading: false,
     saveCartResult: false,
     saveCartError: false,
+
+    getListCartLoading: false,
+    getListCartResult: false,
+    getListCartError: false,
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +18,13 @@ export default function (state = initialState, action) {
                 saveCartLoading: action.payload.loading,
                 saveCartResult: action.payload.data,
                 saveCartError: action.payload.errorMassage,
+            };
+        case GET_LIST_CART:
+            return{
+                ...state,
+                getListCartLoading: action.payload.loading,
+                getListCartResult: action.payload.data,
+                getListCartError: action.payload.errorMassage,
             };
         default:
             return state;

@@ -7,21 +7,21 @@ import { IconRemove } from '../../../assets'
 import { colors, fonts, numberWithCommas, responsiveHeight, responsiveWidth } from '../../../utils'
 import Inputan from '../Inputan'
 
-const CartCard = ({cart}) => {
+const CartCard = ({cart, cartUtama, id}) => {
 
     return (
         <View style={styles.container}>
-            <Image source={cart.product.gambar[0]} style={styles.gambar}/>
+            <Image source={{ uri : cart.product.gambar[0]} } style={styles.gambar}/>
             <View>
                 <Text style={styles.nama}>{cart.product.nama}</Text>
                 <Text style={styles.text}>Rp. {numberWithCommas(cart.product.harga)}</Text>
                 <Text style={styles.text}>Stock : {cart.product.stok}</Text>
                 <Jarak height={14} />
 
-                <Text style={styles.text}>Quantity : {cart.jumlahPesan}</Text>
-                <Text style={styles.text}>Variant : {cart.warna}</Text>
+                <Text style={styles.text}>Quantity : {cart.jumlahOrder}</Text>
+                <Text style={styles.text}>Variant : {cart.varian}</Text>
 
-                <View >
+                {/* {<View >
                     <Inputan label="Quantity" value={cart.jumlahPesan}/>
                     <Pilihan 
                         label="Variant" 
@@ -30,7 +30,7 @@ const CartCard = ({cart}) => {
                         fontSize={14} 
                         datas={cart.product.warna}
                     />
-                </View>
+                </View>} */}
             </View>
 
             <TouchableOpacity style={styles.remove}>

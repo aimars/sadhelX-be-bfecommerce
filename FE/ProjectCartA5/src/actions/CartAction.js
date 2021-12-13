@@ -2,6 +2,7 @@ import FIREBASE from '../config/FIREBASE'
 import { dispatchError, dispatchLoading, dispatchSuccess } from '../utils'
 
 export const MASUK_CART = "MASUK_CART";
+export const GET_LIST_CART = "GET_LIST_CART";
 
 export const masukCart = (data) => {
     return (dispatch) => {
@@ -19,7 +20,7 @@ export const masukCart = (data) => {
                     //Update Cart utama
                     const cartUtama = querySnapshot.val()
                     const hargaBaru = parseInt(data.jumlah) * parseInt(data.product.harga)
-                    const beratBaru = parseFloat(data.jumlah) * parseFloat(data.product.berat)
+                    const beratBaru = parseInt(data.jumlah) * parseFloat(data.product.berat)
 
                     FIREBASE.database()
                         .ref('carts')
@@ -43,7 +44,7 @@ export const masukCart = (data) => {
                         user: data.uid, 
                         tanggal: new Date().toDateString(),
                         totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
-                        totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat)
+                        totalBerat: parseInt(data.jumlah) * parseFloat(data.product.berat)
                     }
 
                     FIREBASE.database()
@@ -76,7 +77,7 @@ export const masukCartDetail = (data) => {
             product: data.product,
             jumlahOrder: data.jumlah,
             totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
-            totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat),
+            totalBerat: parseInt(data.jumlah) * parseFloat(data.product.berat),
             varian: data.varian
         };
 
@@ -94,5 +95,27 @@ export const masukCartDetail = (data) => {
                 dispatchError(dispatch, MASUK_CART, error);
                 alert(error);
             })
+    }
+}
+
+export const getListCart = (id) => {
+    return (dispatch) => {
+        dispatchLoading(dispatch, GET_LIST_CART);
+
+        FIREBASE.database()
+        .ref('carts/'+id)
+        .once('value', (querySnapshot) => {
+
+            //console.log("Data : ", querySnapshot.val());
+            
+            //Hasil
+            let data = querySnapshot.val();
+        
+            dispatchSuccess(dispatch, GET_LIST_CART, data);
+        })
+        .catch((error) => {
+            dispatchError(dispatch, GET_LIST_CART, error);
+            alert(error);
+        });
     }
 }

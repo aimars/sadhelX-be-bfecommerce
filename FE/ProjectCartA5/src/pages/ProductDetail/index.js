@@ -53,7 +53,7 @@ class ProductDetail extends Component {
                 }
             } else {
                 Alert.alert('Error', 'Silahkan Login Terlebih Dahulu');
-                //this.props.navigation.replace('login') //untuk mengembalikan ke halaman login
+                this.props.navigation.replace("Login") //untuk mengembalikan ke halaman login
             }
         })
     }
