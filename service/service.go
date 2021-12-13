@@ -29,8 +29,11 @@ func NewService(repo datastruct.DBRepository, logger log.Logger) Service{
 	}
 }
 
+<<<<<<< HEAD
 func (s *service) AddCart(ctx context.Context, cart datastruct.DBRepository) (*datastruct.DBRepository, error){
 	cartExist, err := s.repository.cartIsExist(ctx, cart.product_id)
 	
 
 }
+=======
+>>>>>>> 4d5c47737142ca39f7a977542873757601a42a87
