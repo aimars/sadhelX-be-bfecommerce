@@ -6,6 +6,7 @@ import { colors, fonts } from '../../utils'
 import { ListProduct } from '../../components'
 import { getListProduct } from '../../actions/ProductAction'
 import { connect } from 'react-redux'
+import { Tombol, Jarak } from '../../components/kecil'
 
 class Home extends Component {
 
@@ -29,6 +30,15 @@ class Home extends Component {
                         <Text style={styles.label}>Pilih Product</Text>
                         <ListProduct navigation={navigation}/>
                     </View>
+                    
+                    <View style={styles.footer}>
+                        <Tombol 
+                            type="text" 
+                            title="SignIn / SignOut" 
+                            padding={10} 
+                            onPress={() => navigation.navigate('Login')}/>
+                    </View>
+                    
                 </ScrollView>
                 
             </View>
@@ -39,7 +49,10 @@ class Home extends Component {
 export default connect()(Home)
 
 const styles = StyleSheet.create({
-    page: { flex: 1, backgroundColor: colors.white },
+    page: { 
+        flex: 1,
+        backgroundColor: colors.white 
+    },
     pilihProduct: {
         marginHorizontal: 30,
         marginTop: 10,
@@ -47,5 +60,9 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 18,
         fontFamily: fonts.primary.regular
-    }
+    },
+    footer: {
+        paddingHorizontal: 30,
+        paddingBottom: 30,
+    },
 });

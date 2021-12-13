@@ -7,24 +7,26 @@ export const masukCart = (data) => {
     return (dispatch) => {
         dispatchLoading(dispatch, MASUK_CART);
         
-        //Cek apakah data user (Customer) sudah ada atau tidak
+        //Cek apakah data cart user (Customer) sudah ada atau tidak
         FIREBASE.database()
             .ref('carts/'+data.uid)
             .once('value', (querySnapshot) => {
 
-                console.log("Cek Cart Customer ada atau tidak", querySnapshot.val());
+                //console.log("Cek Cart Customer ada atau tidak", querySnapshot.val());
 
                 if(querySnapshot.val()) {
 
                     //Update Cart utama
                     const cartUtama = querySnapshot.val()
                     const hargaBaru = parseInt(data.jumlah) * parseInt(data.product.harga)
+                    const beratBaru = parseFloat(data.jumlah) * parseFloat(data.product.berat)
 
                     FIREBASE.database()
                         .ref('carts')
                         .child(data.uid)
                         .update({
                             totalHarga: cartUtama.totalHarga + hargaBaru,
+                            totalBerat: cartUtama.totalHarga + beratBaru
                         })
                         .then((response) => {
                             //simpan ke Detail Keranjang
@@ -38,9 +40,10 @@ export const masukCart = (data) => {
                 }else {
                     //Simpan Cart Utama
                     const cartUtama = {
-                        user: data.uid,
-                        tanggal: new Date().toDateString,
-                        totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga)
+                        user: data.uid, 
+                        tanggal: new Date().toDateString(),
+                        totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
+                        totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat)
                     }
 
                     FIREBASE.database()
@@ -49,7 +52,7 @@ export const masukCart = (data) => {
                         .set(cartUtama)
                         .then((response) => {
 
-                            console.log("Simpan cart utama", response);
+                            //console.log("Simpan cart utama", response);
 
                             //simpan ke Detail Keranjang
                             dispatch(masukCartDetail(data));
@@ -73,6 +76,7 @@ export const masukCartDetail = (data) => {
             product: data.product,
             jumlahOrder: data.jumlah,
             totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
+            totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat),
             varian: data.varian
         };
 
@@ -82,7 +86,7 @@ export const masukCartDetail = (data) => {
             .push(orders)
             .then((response) => {
 
-                console.log("Simpan cart detail", response);
+                //console.log("Simpan cart detail", response);
 
                 dispatchSuccess(dispatch, MASUK_CART, response ? response : []);
             })

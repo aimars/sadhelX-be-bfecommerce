@@ -15,7 +15,15 @@ const Pilihan = ({label, datas, width, height, fontSize, selectedValue, onValueC
                     onValueChange={onValueChange}>
                     <Picker.Item label="--Choose--" value="" />
                     {datas.map((item, index) => {
-                        return <Picker.Item label={item} value={item} key={index} />
+                        if(label == "Provinsi") {
+                            return <Picker.Item label={item.province} value={item.province_id} key={item.province_id} />
+                        }else if(label == "Kota/Kab"){
+                            return <Picker.Item label={item.type+" "+item.city_name} value={item.city_id} key={item.city_id} />
+                        }else if(label == "Pilih Ekspedisi") {
+                            return <Picker.Item label={item.label} value={item} key={item.id} />
+                        }else {
+                            return <Picker.Item label={item} value={item} key={index} />
+                        }
                     })}
                 </Picker>
             </View>
