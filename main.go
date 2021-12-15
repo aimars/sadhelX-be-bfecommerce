@@ -55,6 +55,16 @@ func main() {
 
 	/*DELETE PER CARTS*/
 	http.HandleFunc("/cart/delete", transport.DelCartsReq)
+
+	/*UPDATE COLOR PRODUCT*/
+	http.HandleFunc("/update/color", transport.UpdateColorProductReq)
+
+	/*MENAMBAH QTY +1*/
+	http.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
+
+	/*MENGURANGI QTY -1*/
+	http.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
+
 	logger := log.NewLogfmtLogger(os.Stdout)
 
 	transport.RegisterHttpsServicesAndStartListener()
@@ -63,7 +73,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8081"
 	}
 
 	logger.Log("listening-on", port)
