@@ -57,7 +57,7 @@ func main() {
 	http.HandleFunc("/cart/delete", transport.DelCartsReq)
 
 	/*UPDATE COLOR PRODUCT*/
-	http.HandleFunc("/update/color", transport.UpdateColorProductReq)
+	http.HandleFunc("/update/color", transport.UpdateColor)
 
 	/*MENAMBAH QTY +1*/
 	http.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
