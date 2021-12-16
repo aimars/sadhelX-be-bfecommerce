@@ -159,7 +159,7 @@ func ResponseJSON(w http.ResponseWriter, p interface{}, status int) {
 	w.Write([]byte(ubahkeByte))
 }
 
-/*Connect to database*/
+/*======================================= Connect to database ===========================================*/
 func ConnDB() (*sql.DB, error) {
 	//connection string
 	connStr := fmt.Sprintf("host = %s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
@@ -181,55 +181,6 @@ func ConnDB() (*sql.DB, error) {
 	return db, nil
 }
 
-func Delete(ctx context.Context, cart datastruct.CartsFields) error {
-	db, err := ConnDB()
-
-	if err != nil {
-		fmt.Sprintf("cant connect to database")
-	}
-
-	queryText := fmt.Sprintf("delete from carts where cart_id = '%d'", cart.Cart_Id)
-
-	s, err := db.ExecContext(ctx, queryText)
-
-	if err != nil && err != sql.ErrNoRows {
-		return err
-	}
-
-	check, err := s.RowsAffected()
-	fmt.Println(check)
-	if check == 0 {
-		return errors.New("id tidak ada")
-	}
-	return nil
-}
-
-func DeleteMahasiswa(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "DELETE" {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		var cart datastruct.CartsFields
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
-			return
-		}
-		cart.Cart_Id, _ = strconv.Atoi(id)
-
-		if err := Delete(ctx, cart); err != nil {
-			kesalahan := map[string]string{
-				"error": fmt.Sprintf("%v", err),
-			}
-			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
-			return
-		}
-
-		http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
-		return
-
-	}
-}
 
 func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -309,8 +260,7 @@ func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 	return carts, nil
 }
 
-/*Insert to Cart and Order Items*/
-// PostMahasiswa
+
 func PostCart(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
@@ -386,7 +336,7 @@ func GetDataProduk(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*MEMASUKKAN ITEM KEDALAM CART*/
+/*====================================== MEMASUKKAN ITEM KEDALAM CART ===========================================*/
 func AddProductToCart(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 
@@ -441,9 +391,9 @@ func InsertPorductToCart(ctx context.Context, mixco datastruct.MixCartOrder) err
 	return nil
 }
 
-/*MENGHAPUS PER-PRODUCT DARI CARTS*/
 
-/*MENGHAPUS  PER-CARTSCART*/
+
+/*================================== MENGHAPUS  PER-CART ==================================*/
 func DelCartsReq(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == "DELETE" {
@@ -508,85 +458,8 @@ func DeleteCart(ctx context.Context, cartdel datastruct.MixCartOrder) error {
 	return nil
 }
 
-/*MENGHAPUS PER ITEM PRODUCT*/
 
-/*Update varian warna*/
-func UpdateColorProductReq(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "PUT" {
-
-		if r.Header.Get("Content-Type") != "application/json" {
-			http.Error(w, "Gunakan content type application / json", http.StatusBadRequest)
-			return
-		}
-
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		var oritem datastruct.OrderItemsFields
-
-		id_cart := r.URL.Query().Get("id_cart")
-		id_product := r.URL.Query().Get("id_product")
-
-		if id_cart == "" {
-			ResponseJSON(w, "id cart tidak boleh kosong", http.StatusBadRequest)
-			return
-		}
-
-		oritem.Cart_Id, _ = strconv.Atoi(id_cart)
-		oritem.Product_Id, _ = strconv.Atoi(id_product)
-
-		if err := json.NewDecoder(r.Body).Decode(&oritem); err != nil {
-			ResponseJSON(w, err, http.StatusBadRequest)
-			return
-		}
-
-		if err := UpdateColorSql(ctx, oritem); err != nil {
-			kesalahan := map[string]string{
-				"error": fmt.Sprintf("%v", err),
-			}
-
-			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
-			return
-		}
-
-		res := map[string]string{
-			"status": "Succesfully",
-		}
-
-		ResponseJSON(w, res, http.StatusCreated)
-		return
-	}
-
-	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
-	return
-}
-
-func UpdateColorSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
-
-	db, err := ConnDB()
-
-	if err != nil {
-		log.Fatal("Can't connect to database", err)
-	}
-
-	queryText := fmt.Sprintf("update order_items set color = %v where product_id = %v and cart_id = %v",
-		oritem.Color,
-		oritem.Product_Id,
-		oritem.Cart_Id)
-
-	fmt.Println(queryText)
-
-	_, err = db.ExecContext(ctx, queryText)
-
-	if err != nil && err != sql.ErrNoRows {
-
-		return err
-	}
-
-	return nil
-}
-
-/*================================================== UPDATE SIZE PRODUCT ================================================== */
+/*================================================== UPDATE QTY to QTY + 1 ================================================== */
 
 /*ADD QTY + 1 */
 func UpdateQtyPlusOne(w http.ResponseWriter, r *http.Request) {
@@ -626,7 +499,7 @@ func UpdateQtyPlusOne(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
+
 func UpdateQuantityPlusOne(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
@@ -688,7 +561,6 @@ func UpdateQtyMinusOne(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
 func UpdateQuantityMinusOne(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
@@ -759,7 +631,7 @@ func UpdateColor(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
+
 func UpdateColorPSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
@@ -831,7 +703,6 @@ func UpdateSize(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
 func UpdateSizeSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
@@ -894,7 +765,7 @@ func DeletePerProductFromCart(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
+
 func DeletePerProductFromCartSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
