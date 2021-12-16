@@ -855,3 +855,65 @@ func UpdateSizeSql(ctx context.Context, oritem datastruct.OrderItemsFields) erro
 }
 
 /*===============================================================================================================*/
+
+/*------------------------------------- DELETE PER ITEM FROM ORDER_ITEMS --------------------------------------------*/
+func DeletePerProductFromCart(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "DELETE" {
+
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		var ortem datastruct.OrderItemsFields
+
+		id := r.URL.Query().Get("id")
+
+		if id == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+		ortem.Oritem_id, _ = strconv.Atoi(id)
+
+		if err := DeletePerProductFromCartSql(ctx, ortem); err != nil {
+			kesalahan := map[string]string{
+				"error": fmt.Sprintf("%v", err),
+			}
+
+			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
+			return
+		}
+
+		res := map[string]string{
+			"status": "Succesfully Delete Product from Cart",
+		}
+
+		ResponseJSON(w, res, http.StatusOK)
+		return
+	}
+
+	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+	return
+}
+
+// Update
+func DeletePerProductFromCartSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
+
+	db, err := ConnDB()
+
+	if err != nil {
+		log.Fatal("Can't connect to database", err)
+	}
+
+	queryText := fmt.Sprintf("delete from order_items where oritem_id = '%d'",
+		oritem.Oritem_id)
+	fmt.Println(queryText)
+
+	_, err = db.ExecContext(ctx, queryText)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	return nil
+}
+
+/*===================================================================================================================*/

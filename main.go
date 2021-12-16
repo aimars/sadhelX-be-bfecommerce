@@ -54,7 +54,10 @@ func main() {
 	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
 
 	/*DELETE PER CARTS*/
-	http.HandleFunc("/cart/delete", transport.DelCartsReq)
+	http.HandleFunc("/delete/cart", transport.DelCartsReq)
+
+	/*DELETE PER PRODUCTS*/
+	http.HandleFunc("/delete/product", transport.DeletePerProductFromCart)
 
 	/*UPDATE COLOR PRODUCT*/
 	http.HandleFunc("/update/color", transport.UpdateColor)
@@ -67,6 +70,11 @@ func main() {
 
 	/*MENGURANGI QTY -1*/
 	http.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
+
+	/*MENGATUR JUMLAH QTY YANG DIINPUTKAN OLEH USER*/
+
+	/*========== PROSES CHECKOUT =============*/
+	/*MEMASUKKAN CART KE CHECKOUT*/
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
