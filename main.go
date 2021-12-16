@@ -59,6 +59,9 @@ func main() {
 	/*UPDATE COLOR PRODUCT*/
 	http.HandleFunc("/update/color", transport.UpdateColor)
 
+	/*UPDATE SIZE PRODUCT*/
+	http.HandleFunc("/update/size", transport.UpdateSize)
+
 	/*MENAMBAH QTY +1*/
 	http.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
 

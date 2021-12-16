@@ -783,3 +783,75 @@ func UpdateColorPSql(ctx context.Context, oritem datastruct.OrderItemsFields) er
 }
 
 /*===============================================================================================================*/
+
+/*------------------------------------------------------- UPDATE SIZE -------------------------------------------*/
+func UpdateSize(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "PUT" {
+		/*set color via json*/
+		if r.Header.Get("Content-Type") != "application/json" {
+			http.Error(w, "Gunakan content type application / json", http.StatusBadRequest)
+			return
+		}
+
+		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
+
+		var ortem datastruct.OrderItemsFields
+
+		id := r.URL.Query().Get("id")
+
+		if id == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+		ortem.Oritem_id, _ = strconv.Atoi(id)
+
+		if err := json.NewDecoder(r.Body).Decode(&ortem); err != nil {
+			ResponseJSON(w, err, http.StatusBadRequest)
+			return
+		}
+		if err := UpdateSizeSql(ctx, ortem); err != nil {
+			kesalahan := map[string]string{
+				"error": fmt.Sprintf("%v", err),
+			}
+
+			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
+			return
+		}
+
+		res := map[string]string{
+			"status": "Succesfully change size product choosen",
+		}
+
+		ResponseJSON(w, res, http.StatusCreated)
+		return
+	}
+
+	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+	return
+}
+
+// Update
+func UpdateSizeSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
+
+	db, err := ConnDB()
+
+	if err != nil {
+		log.Fatal("Can't connect to database", err)
+	}
+
+	queryText := fmt.Sprintf("update order_items set psize = '%s' where oritem_id = '%d'",
+		oritem.Psize,
+		oritem.Oritem_id)
+	fmt.Println(queryText)
+
+	_, err = db.ExecContext(ctx, queryText)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	return nil
+}
+
+/*===============================================================================================================*/
