@@ -3,6 +3,7 @@ import { dispatchError, dispatchLoading, dispatchSuccess } from '../utils'
 
 export const MASUK_CART = "MASUK_CART";
 export const GET_LIST_CART = "GET_LIST_CART";
+export const REMOVE_CART = "REMOVE_CART";
 
 export const masukCart = (data) => {
     return (dispatch) => {
@@ -117,5 +118,60 @@ export const getListCart = (id) => {
             dispatchError(dispatch, GET_LIST_CART, error);
             alert(error);
         });
+    }
+}
+
+export const removeCart = (id, cartUtama, cart) => {
+    return(dispatch) => {
+        dispatchLoading(dispatch, REMOVE_CART);
+
+        const totalHargaBaru = cartUtama.totalHarga - cart.totalHarga;
+        const totalBeratBaru = cartUtama.totalBerat - cart.totalBerat;
+
+        if(totalHargaBaru === 0) {
+            //hapus cart utama & detail
+            FIREBASE.database()
+                .ref('carts')
+                .child(cartUtama.user)
+                .remove()
+                .then((response) => {
+                    dispatchSuccess(dispatch, REMOVE_CART, "Cart Deleted Successfully")
+                }).catch((error) => {
+                    dispatchError(dispatch, REMOVE_CART, error);
+                    alert(error);
+                })
+        }else {
+            //update total harga dan berat cart utama
+            FIREBASE.database()
+                .ref('carts')
+                .child(cartUtama.user)
+                .update({
+                    totalHarga: totalHargaBaru,
+                    totalBerat: totalBeratBaru
+                })
+                .then((response) => {
+                    //hapus order/cart detail
+                    dispatch(removeCartDetail(id, cartUtama));
+                }).catch((error) => {
+                    dispatchError(dispatch, REMOVE_CART, error);
+                    alert(error);
+                })
+        }
+    }
+}
+
+export const removeCartDetail = (id, cartUtama) => {
+    return (dispatch) => {
+        FIREBASE.database()
+            .ref('carts/'+cartUtama.user)
+            .child('orders')
+            .child(id)
+            .remove()
+            .then((response) => {
+                dispatchSuccess(dispatch, REMOVE_CART, "Cart Deleted Successfully")
+            }).catch((error) => {
+                dispatchError(dispatch, REMOVE_CART, error);
+                alert(error);
+            })
     }
 }
