@@ -6,8 +6,14 @@ import { Jarak, Pilihan } from '../../kecil'
 import { IconRemove } from '../../../assets'
 import { colors, fonts, numberWithCommas, responsiveHeight, responsiveWidth } from '../../../utils'
 import Inputan from '../Inputan'
+import { connect } from 'react-redux'
+import { removeCart } from '../../../actions/CartAction'
 
-const CartCard = ({cart, cartUtama, id}) => {
+const CartCard = ({cart, cartUtama, id, dispatch}) => {
+
+    const hapusCart = () => {
+        dispatch(removeCart(id, cartUtama, cart))
+    }
 
     return (
         <View style={styles.container}>
@@ -22,25 +28,25 @@ const CartCard = ({cart, cartUtama, id}) => {
                 <Text style={styles.text}>Variant : {cart.varian}</Text>
 
                 {/* {<View >
-                    <Inputan label="Quantity" value={cart.jumlahPesan}/>
+                    <Inputan label="Quantity" value={cart.jumlahOrder}/>
                     <Pilihan 
                         label="Variant" 
                         width={responsiveWidth(166)}
                         height={responsiveHeight(43)} 
                         fontSize={14} 
-                        datas={cart.product.warna}
+                        datas={cart.product.varian}
                     />
                 </View>} */}
             </View>
 
-            <TouchableOpacity style={styles.remove}>
+            <TouchableOpacity style={styles.remove} onPress={() => hapusCart()}>
                 <IconRemove />
             </TouchableOpacity>
         </View>
     )
 }
 
-export default CartCard
+export default connect()(CartCard);
 
 const styles = StyleSheet.create({
     container: {

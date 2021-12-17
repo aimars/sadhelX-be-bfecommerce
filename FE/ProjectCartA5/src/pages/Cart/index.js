@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, Alert } from 'react-native'
 import { dummyPesanans } from '../../data'
 import { ListCart, Tombol } from '../../components'
 import { colors, fonts, getData, numberWithCommas, responsiveHeight } from '../../utils'
@@ -19,6 +19,22 @@ class Cart extends Component {
                 this.props.navigation.replace("Login");
             }
         })
+    }
+
+    componentDidUpdate(prevProps) {
+        const { removeCartResult } = this.props
+
+        if(removeCartResult && prevProps.removeCartResult !== removeCartResult) {
+            getData('user').then((res) => {
+                if(res) {
+                    //sudah login
+                    this.props.dispatch(getListCart(res.uid));
+                }else {
+                    //belum login
+                    this.props.navigation.replace("Login");
+                }
+            })
+        }
     }
 
     render() {
@@ -60,6 +76,10 @@ const mapStateToProps = (state) => ({
     getListCartLoading: state.CartReducer.getListCartLoading,
     getListCartResult: state.CartReducer.getListCartResult,
     getListCartError: state.CartReducer.getListCartError,
+
+    removeCartLoading: state.CartReducer.removeCartLoading,
+    removeCartResult: state.CartReducer.removeCartResult,
+    removeCartError: state.CartReducer.removeCartError,
 })
 
 export default connect(mapStateToProps, null)(Cart)
