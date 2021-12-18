@@ -3,13 +3,28 @@
 import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
-import { colors, fonts, responsiveHeight } from '../../../utils'
+import { connect } from 'react-redux'
+import { colors, fonts, getData, responsiveHeight } from '../../../utils'
 import{ Jarak, Tombol } from '../../kecil'
+import { getListCart } from '../../../actions/CartAction'
 
-export default class HeaderComponent
- extends Component {
+class HeaderComponent extends Component {
+    componentDidMount() {
+        getData('user').then((res) => {
+            if(res) {
+                this.props.dispatch(getListCart(res.uid));
+            }
+        })
+    }
+
     render() {
-        const {navigation} = this.props
+        const {navigation, getListCartResult} = this.props
+
+        let totalCart;
+        if(getListCartResult) {
+            totalCart = Object.keys(getListCartResult.orders).length
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.wrapperHeader}>
@@ -17,12 +32,23 @@ export default class HeaderComponent
                         <TextInput placeholder="Search . . . ." style={styles.input} />
                     </View>
                     <Jarak width={10} />
-                    <Tombol icon="cart" padding={15} onPress={() => navigation.navigate('Shopping Cart')}/>
+                    <Tombol 
+                        icon="cart" 
+                        padding={15} 
+                        onPress={() => navigation.navigate('Shopping Cart')}
+                        totalCart={totalCart}
+                    />
                 </View>
             </View>
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    getListCartResult: state.CartReducer.getListCartResult
+})
+
+export default connect(mapStateToProps, null)(HeaderComponent)
 
 const styles = StyleSheet.create({
     container: {
