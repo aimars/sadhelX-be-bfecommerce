@@ -14,6 +14,9 @@ class Checkout extends Component {
         this.state = {
             profile: false,
             ekspedisi: [],
+            ekspedisiSelected: false,
+            ongkir: 0,
+            estimasi: '',
             totalHarga: this.props.route.params.totalHarga,
             totalBerat: this.props.route.params.totalBerat,
             kota: '',
