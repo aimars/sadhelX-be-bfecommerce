@@ -21,14 +21,14 @@ export const masukCart = (data) => {
                     //Update Cart utama
                     const cartUtama = querySnapshot.val()
                     const hargaBaru = parseInt(data.jumlah) * parseInt(data.product.harga)
-                    const beratBaru = parseInt(data.jumlah) * parseFloat(data.product.berat)
+                    const beratBaru = parseFloat(data.jumlah) * parseFloat(data.product.berat)
 
                     FIREBASE.database()
                         .ref('carts')
                         .child(data.uid)
                         .update({
                             totalHarga: cartUtama.totalHarga + hargaBaru,
-                            totalBerat: cartUtama.totalHarga + beratBaru
+                            totalBerat: cartUtama.totalBerat + beratBaru
                         })
                         .then((response) => {
                             //simpan ke Detail Keranjang
@@ -45,7 +45,7 @@ export const masukCart = (data) => {
                         user: data.uid, 
                         tanggal: new Date().toDateString(),
                         totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
-                        totalBerat: parseInt(data.jumlah) * parseFloat(data.product.berat)
+                        totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat)
                     }
 
                     FIREBASE.database()
@@ -78,7 +78,7 @@ export const masukCartDetail = (data) => {
             product: data.product,
             jumlahOrder: data.jumlah,
             totalHarga: parseInt(data.jumlah) * parseInt(data.product.harga),
-            totalBerat: parseInt(data.jumlah) * parseFloat(data.product.berat),
+            totalBerat: parseFloat(data.jumlah) * parseFloat(data.product.berat),
             varian: data.varian
         };
 
