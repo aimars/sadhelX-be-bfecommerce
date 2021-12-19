@@ -1,36 +1,76 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View } from 'react-native'
 import { CardAlamat, Jarak, Pilihan, Tombol } from '../../components';
-import { colors, fonts, numberWithCommas, responsiveHeight } from "../../utils";
-import { dummyProfile, dummyPesanans } from "../../data";
+import { colors, fonts, getData, numberWithCommas, responsiveHeight } from "../../utils";
 import { ListCart } from '../../components' //
+import { connect } from 'react-redux';
+import { getKotaDetail } from '../../actions/RajaOngkirAction';
 
 
-export default class Checkout extends Component {
+class Checkout extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
-            profile: dummyProfile,
-            pesanan: dummyPesanans[0],
-            ekspedisi: []
+            profile: false,
+            ekspedisi: [],
+            totalHarga: this.props.route.params.totalHarga,
+            totalBerat: this.props.route.params.totalBerat,
+            kota: '',
+            provinsi: '',
+            alamat: '',
+        }
+    }
+
+    componentDidMount() {
+        this.getUserData();
+    }
+
+    getUserData = () => {
+        getData('user').then(res => {
+            const data = res
+        
+            if(data) {
+                this.setState({
+                    profile: data,
+                    alamat: data.alamat,
+                })
+
+                this.props.dispatch(getKotaDetail(data.kota));
+
+            }else {
+                this.props.navigation.replace('Login')
+            }
+        })
+    }
+
+    componentDidUpdate(prevProps) {
+        const { getKotaDetailResult } = this.props
+
+        if(getKotaDetailResult && prevProps.getKotaDetailResult !== getKotaDetailResult) {
+            this.setState({
+                provinsi: getKotaDetailResult.province,
+                kota: getKotaDetailResult.type+" "+getKotaDetailResult.city_name,
+            })
         }
     }
     
     render() {
-        const { profile, pesanan, ekspedisi } = this.state
+        const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi } = this.state;
+        //console.log("Profile : ", profile);
+
         return (
             <View style={styles.pages}>
                 <View style={styles.isi}>
                     <Text style={styles.textBold}>Delevery Address</Text>
-                    <CardAlamat profile={profile}/>
+                    <CardAlamat profile={profile} alamat={alamat} provinsi={provinsi} kota={kota}/>
 
                     <Jarak height={20}/>
                     <Text style={styles.textBold}>Products</Text>
 
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Sub Total :</Text>
-                        <Text style={styles.textBold}>Rp. {numberWithCommas(pesanan.totalHarga)}</Text>
+                        <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga)}</Text>
                     </View>
 
                     <Pilihan label="Choose Expedition" datas={ekspedisi}/>
@@ -38,7 +78,7 @@ export default class Checkout extends Component {
 
                     <Text style={styles.textBold}>Shipping Cost :</Text>
                     <View style={styles.ongkir}>
-                        <Text style={styles.text}>For Weight : {pesanan.berat} kg </Text>
+                        <Text style={styles.text}>For Weight : {totalBerat} kg </Text>
                         <Text style={styles.textBold}>Rp. {numberWithCommas(20000)}</Text>
                     </View>
                     <View style={styles.ongkir}>
@@ -50,7 +90,7 @@ export default class Checkout extends Component {
                 <View style={styles.footer}>
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Total :</Text>
-                        <Text style={styles.textBold}>Rp. {numberWithCommas(pesanan.totalHarga + 20000)}</Text>
+                        <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga + 20000)}</Text>
                     </View>
                     <Tombol 
                         title="Pay" 
@@ -63,6 +103,14 @@ export default class Checkout extends Component {
         )
     }
 }
+
+const mapStateToProps = (state) => ({
+    getKotaDetailLoading: state.RajaOngkirReducer.getKotaDetailLoading,
+    getKotaDetailResult: state.RajaOngkirReducer.getKotaDetailResult,
+    getKotaDetailError: state.RajaOngkirReducer.getKotaDetailError,
+})
+
+export default connect(mapStateToProps, null)(Checkout)
 
 const styles = StyleSheet.create({
     pages: {

@@ -2,13 +2,13 @@ import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { colors, fonts } from '../../../utils'
 
-const CardAlamat = ({profile}) => {
+const CardAlamat = ({profile, alamat, provinsi, kota}) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.alamat}>{profile.nama} - {profile.noHP} </Text>
-            <Text style={styles.alamat}>{profile.alamat}</Text>
-            <Text style={styles.alamat}>Kota/Kab. {profile.kota}</Text>
-            <Text style={styles.alamat}>Provinsi {profile.provinsi}</Text>
+            <Text style={styles.alamat}>{profile.nama} - {profile.nohp} </Text>
+            <Text style={styles.alamat}>{alamat}</Text>
+            <Text style={styles.alamat}>{kota}</Text>
+            <Text style={styles.alamat}>Provinsi {provinsi}</Text>
             <TouchableOpacity>
                 <Text style={styles.ubahAlamat}>Change Address</Text>
             </TouchableOpacity>

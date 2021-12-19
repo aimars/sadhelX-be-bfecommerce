@@ -55,7 +55,7 @@ class Cart extends Component {
                             title="Check Out" 
                             type="text" 
                             padding={responsiveHeight(15)}
-                            onPress={() => this.props.navigation.navigate('Check Out')}
+                            onPress={() => this.props.navigation.navigate('Check Out', {totalHarga: getListCartResult.totalHarga, totalBerat: getListCartResult.totalBerat})}
                         />
                     ) : (
                         <Tombol 
