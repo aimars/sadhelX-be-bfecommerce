@@ -46,6 +46,35 @@ func main() {
 	http.HandleFunc("/show", transport.ShowCarts)
 	http.HandleFunc("/insert/cart", transport.PostCart)
 	http.HandleFunc("/getproduk", transport.GetDataProduk)
+	//	http.HandleFunc("/insert/cart", transport.PostCart)
+
+	/*MENAMBAHKAN PRODUCT KE DALAM CART*/
+	http.HandleFunc("/insert/producttocart", transport.AddProductToCart)
+
+	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
+
+	/*DELETE PER CARTS*/
+	http.HandleFunc("/delete/cart", transport.DelCartsReq)
+
+	/*DELETE PER PRODUCTS*/
+	http.HandleFunc("/delete/product", transport.DeletePerProductFromCart)
+
+	/*UPDATE COLOR PRODUCT*/
+	http.HandleFunc("/update/color", transport.UpdateColor)
+
+	/*UPDATE SIZE PRODUCT*/
+	http.HandleFunc("/update/size", transport.UpdateSize)
+
+	/*MENAMBAH QTY +1*/
+	http.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
+
+	/*MENGURANGI QTY -1*/
+	http.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
+
+	/*MENGATUR JUMLAH QTY YANG DIINPUTKAN OLEH USER*/
+
+	/*========== PROSES CHECKOUT =============*/
+	/*MEMASUKKAN CART KE CHECKOUT*/
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
@@ -55,7 +84,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "8081"
 	}
 
 	logger.Log("listening-on", port)
