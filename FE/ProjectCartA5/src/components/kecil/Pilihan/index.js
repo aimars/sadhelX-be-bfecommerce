@@ -19,7 +19,7 @@ const Pilihan = ({label, datas, width, height, fontSize, selectedValue, onValueC
                             return <Picker.Item label={item.province} value={item.province_id} key={item.province_id} />
                         }else if(label == "Kota/Kab"){
                             return <Picker.Item label={item.type+" "+item.city_name} value={item.city_id} key={item.city_id} />
-                        }else if(label == "Pilih Ekspedisi") {
+                        }else if(label == "Choose Expedition") {
                             return <Picker.Item label={item.label} value={item} key={item.id} />
                         }else {
                             return <Picker.Item label={item} value={item} key={index} />
