@@ -4,7 +4,8 @@ import { CardAlamat, Jarak, Pilihan, Tombol } from '../../components';
 import { colors, fonts, getData, numberWithCommas, responsiveHeight } from "../../utils";
 import { ListCart } from '../../components' //
 import { connect } from 'react-redux';
-import { getKotaDetail } from '../../actions/RajaOngkirAction';
+import { getKotaDetail } from '../../actions/RajaOngkirAction'
+import { couriers } from '../../data'
 
 
 class Checkout extends Component {
@@ -13,7 +14,7 @@ class Checkout extends Component {
     
         this.state = {
             profile: false,
-            ekspedisi: [],
+            ekspedisi: couriers,
             ekspedisiSelected: false,
             ongkir: 0,
             estimasi: '',
@@ -57,9 +58,10 @@ class Checkout extends Component {
             })
         }
     }
+
     
     render() {
-        const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi } = this.state;
+        const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi, ekspedisiSelected } = this.state;
         //console.log("Profile : ", profile);
 
         return (
@@ -76,7 +78,7 @@ class Checkout extends Component {
                         <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga)}</Text>
                     </View>
 
-                    <Pilihan label="Choose Expedition" datas={ekspedisi}/>
+                    <Pilihan label="Choose Expedition" datas={ekspedisi} selectedValue={ekspedisiSelected}/>
                     <Jarak height={10}/>
 
                     <Text style={styles.textBold}>Shipping Cost :</Text>
