@@ -4,7 +4,7 @@ import { CardAlamat, Jarak, Pilihan, Tombol } from '../../components';
 import { colors, fonts, getData, numberWithCommas, responsiveHeight } from "../../utils";
 import { ListCart } from '../../components' //
 import { connect } from 'react-redux';
-import { getKotaDetail } from '../../actions/RajaOngkirAction'
+import { getKotaDetail, postOngkir } from '../../actions/RajaOngkirAction'
 import { couriers } from '../../data'
 
 
@@ -49,7 +49,7 @@ class Checkout extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { getKotaDetailResult } = this.props
+        const { getKotaDetailResult, ongkirResult } = this.props;
 
         if(getKotaDetailResult && prevProps.getKotaDetailResult !== getKotaDetailResult) {
             this.setState({
@@ -57,11 +57,27 @@ class Checkout extends Component {
                 kota: getKotaDetailResult.type+" "+getKotaDetailResult.city_name,
             })
         }
+
+        if(ongkirResult && prevProps.ongkirResult !== ongkirResult) {
+            this.setState({
+                ongkir: ongkirResult.cost[0].value,
+                estimasi: ongkirResult.cost[0].etd
+            })
+        }
     }
 
+    ubahEkspedisi = (ekspedisiSelected) => {
+        if(ekspedisiSelected) {
+            this.setState({
+                ekspedisiSelected: ekspedisiSelected
+            })
+
+            this.props.dispatch(postOngkir(this.state, ekspedisiSelected))
+        }
+    }
     
     render() {
-        const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi, ekspedisiSelected } = this.state;
+        const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi, ekspedisiSelected, ongkir, estimasi } = this.state;
         //console.log("Profile : ", profile);
 
         return (
@@ -71,31 +87,36 @@ class Checkout extends Component {
                     <CardAlamat profile={profile} alamat={alamat} provinsi={provinsi} kota={kota}/>
 
                     <Jarak height={20}/>
-                    <Text style={styles.textBold}>Products</Text>
+                    {/* <Text style={styles.textBold}>Products</Text> */}
 
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Sub Total :</Text>
                         <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga)}</Text>
                     </View>
 
-                    <Pilihan label="Choose Expedition" datas={ekspedisi} selectedValue={ekspedisiSelected}/>
+                    <Pilihan 
+                        label="Choose Expedition" 
+                        datas={ekspedisi} 
+                        selectedValue={ekspedisiSelected} 
+                        onValueChange={(ekspedisiSelected) => this.ubahEkspedisi(ekspedisiSelected)}
+                    />
                     <Jarak height={10}/>
 
                     <Text style={styles.textBold}>Shipping Cost :</Text>
                     <View style={styles.ongkir}>
                         <Text style={styles.text}>For Weight : {totalBerat} kg </Text>
-                        <Text style={styles.textBold}>Rp. {numberWithCommas(20000)}</Text>
+                        <Text style={styles.textBold}>Rp. {numberWithCommas(ongkir)}</Text>
                     </View>
                     <View style={styles.ongkir}>
                         <Text style={styles.text}>Estimated time</Text>
-                        <Text style={styles.textBold}>2-3 Days</Text>
+                        <Text style={styles.textBold}>{estimasi} Days</Text>
                     </View>
                 </View>
 
                 <View style={styles.footer}>
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Total :</Text>
-                        <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga + 20000)}</Text>
+                        <Text style={styles.textBold}>Rp. {numberWithCommas(totalHarga + ongkir)}</Text>
                     </View>
                     <Tombol 
                         title="Pay" 
@@ -113,6 +134,7 @@ const mapStateToProps = (state) => ({
     getKotaDetailLoading: state.RajaOngkirReducer.getKotaDetailLoading,
     getKotaDetailResult: state.RajaOngkirReducer.getKotaDetailResult,
     getKotaDetailError: state.RajaOngkirReducer.getKotaDetailError,
+    ongkirResult: state.RajaOngkirReducer.ongkirResult
 })
 
 export default connect(mapStateToProps, null)(Checkout)

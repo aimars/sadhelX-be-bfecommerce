@@ -107,56 +107,59 @@ export const getKotaDetail = (kota_id) => {
 };
 
 export const postOngkir = (data, ekspedisi) => {
-  return (dispatch) => {
-    dispatchLoading(dispatch, POST_ONGKIR);
+    // console.log("Data: ", data);
+    // console.log("Ekspedisi: ", ekspedisi);
 
-    const formData = new URLSearchParams();
-    formData.append('origin', ORIGIN_CITY);
+    return (dispatch) => {
+        dispatchLoading(dispatch, POST_ONGKIR);
 
-    // --> destination data.profile.kota 
-    formData.append('destination', data.profile.kota);
+        const formData = new URLSearchParams();
+        formData.append('origin', ORIGIN_CITY);
 
-    // --> berat => data.totalBerat
-    formData.append('weight', data.totalBerat < 1 ? 1000 : data.totalBerat*1000);
+        // --> destination data.profile.kota 
+        formData.append('destination', data.profile.kota);
 
-    // --> courier => ekspedisi.kurir
-    formData.append('courier', ekspedisi.kurir);
+        // --> berat => data.totalBerat
+        formData.append('weight', data.totalBerat < 1 ? 1000 : data.totalBerat*1000);
+
+        // --> courier => ekspedisi.kurir
+        formData.append('courier', ekspedisi.kurir);
 
 
-    axios({
-      method: 'POST',
-      url: API_RAJAONGKIR+'cost',
-      timeout: API_TIMEOUT,
-      headers: API_HEADER_RAJAONGKIR_COST,
-      data: formData
-    })
-      .then((response) => {
-        if (response.status !== 200) {
-          // ERROR
-          dispatchError(dispatch, POST_ONGKIR, response);
-        } else {
+        axios({
+            method: 'POST',
+            url: API_RAJAONGKIR+'cost',
+            timeout: API_TIMEOUT,
+            headers: API_HEADER_RAJAONGKIR_COST,
+            data: formData
+        })
+        .then((response) => {
+            if (response.status !== 200) {
+            // ERROR
+            dispatchError(dispatch, POST_ONGKIR, response);
+            } else {
 
-          const ongkirs = response.data.rajaongkir.results[0].costs;
+            const ongkirs = response.data.rajaongkir.results[0].costs;
 
-          const ongkirYangDipilih = ongkirs
-          .filter((ongkir) => ongkir.service === ekspedisi.service).map((filterOngkir) => {
-            return filterOngkir
-          });
+            const ongkirYangDipilih = ongkirs
+            .filter((ongkir) => ongkir.service === ekspedisi.service).map((filterOngkir) => {
+                return filterOngkir
+            });
 
-          //SUKSES
-          dispatchSuccess(
-            dispatch,
-            POST_ONGKIR,
-            ongkirYangDipilih[0],
-          );
-        }
-      })
-      .catch((error) => {
-        // ERROR
-        dispatchError(dispatch, POST_ONGKIR, error);
+            //SUKSES
+            dispatchSuccess(
+                dispatch,
+                POST_ONGKIR,
+                ongkirYangDipilih[0],
+            );
+            }
+        })
+        .catch((error) => {
+            // ERROR
+            dispatchError(dispatch, POST_ONGKIR, error);
 
-        alert(error);
-      })
+            alert(error);
+        })
 
-  }
+    }
 }
