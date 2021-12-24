@@ -75,6 +75,7 @@ func main() {
 
 	/*========== PROSES CHECKOUT =============*/
 	/*MEMASUKKAN CART KE CHECKOUT*/
+	http.HandleFunc("/checkout", transport.Checkout)
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 
