@@ -20,13 +20,6 @@ import (
 	"github.com/subchen/go-curl"
 )
 
-// const (
-// 	host     = "103.157.96.115"
-// 	port     = 5432
-// 	user     = "rantaipolygon"
-// 	password = "whirlpool"
-// 	dbname   = "db_rantaipolygon"
-// )
 
 const (
 	layoutDateTime = "2006-01-02 15:04:05"
@@ -44,15 +37,7 @@ var crt interface{}
 
 var db *sql.DB
 
-// type carts struct {
-// 	cart_id          int
-// 	status           string
-// 	checkout_date    string
-// 	payment_date     string
-// 	user_id          int
-// 	transaction_code string
-// 	payment_method   string
-// }
+
 
 type AphService interface {
 	HelloWorldService(context.Context, string) string
@@ -118,14 +103,6 @@ func RegisterHttpsServicesAndStartListener() {
 	http.Handle("/HelloWorld", HelloWorldHandler)
 }
 
-// func Response_Show_Carts(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("Tes show doang")
-// }
-
-// func Handle_Show_Carts() {
-// 	myRouter := mux.NewRouter().StrictSlash(true)
-// 	myRouter.HandleFunc("Carts", Response_Show_Carts).Methods("GET")
-// }
 
 func Text() {
 	fmt.Println("Hello")
@@ -168,10 +145,7 @@ func ConnDB() (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
 	checkerror(err)
 	fmt.Println("Database Succesfully Connected")
-	//close databse
-	//defer db.Close()
-
-	//check database
+	
 	err = db.Ping()
 	checkerror(err)
 	if err != nil {
@@ -256,7 +230,7 @@ func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// GetAll
+
 func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 
 	var carts []datastruct.CartsFields
@@ -289,19 +263,6 @@ func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 			&cart.Payment_Method); err != nil && sql.ErrNoRows != nil {
 			return nil, err
 		}
-
-		//  Change format string to datetime for created_at and updated_at
-		//	cart.Checkout_Date, err = time.Parse(layoutDateTime, Checkout_Date)
-
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
-		// cart.Payment_Date, err = time.Parse(layoutDateTime, Payment_Date)
-
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
 
 		carts = append(carts, cart)
 	}
