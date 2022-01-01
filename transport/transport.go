@@ -894,7 +894,6 @@ func DeletePerProductFromCart(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Update
 func DeletePerProductFromCartSql(ctx context.Context, oritem datastruct.OrderItemsFields) error {
 
 	db, err := ConnDB()
@@ -1054,4 +1053,86 @@ func CheckoutSql(ctx context.Context, cart datastruct.CartsFields) error {
 	return nil
 }
 
-/*===============================================================================================================*/
+/*=======================================================================================================*/
+/*================================= Menampilkan daftar cart =============================================*/
+func GetCartUser(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		ctx, cancel := context.WithCancel(context.Background())
+
+		defer cancel()
+		var id int
+		iduser := r.URL.Query().Get("iduser")
+
+		if iduser == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+
+		id, _ = strconv.Atoi(iduser)
+
+		crt, err := GetAllCartUser(ctx, id)
+
+		if err != nil {
+			kesalahan := map[string]string{
+				"error": fmt.Sprintf("%v", err),
+			}
+
+			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
+			return
+		}
+
+		ResponseJSON(w, crt, http.StatusOK)
+		return
+	}
+
+	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+	return
+}
+
+func GetAllCartUser(ctx context.Context, iduser int) ([]datastruct.MixCartOrder, error) {
+
+	var carts []datastruct.MixCartOrder
+
+	db, err := ConnDB()
+
+	if err != nil {
+		log.Fatal("Cant connect to Database", err)
+	}
+
+	queryText := fmt.Sprintf("select * from v_cartsandproduct where id_user = '%d'", iduser)
+
+	rowQuery, err := db.QueryContext(ctx, queryText)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for rowQuery.Next() {
+		var cart datastruct.MixCartOrder
+
+		if err = rowQuery.Scan(
+			&cart.Cart_Id,
+			&cart.User_Id,
+			&cart.Status,
+			&cart.Oritem_id,
+			&cart.Product_Id,
+			&cart.Qty,
+			&cart.Color,
+			&cart.Psize,
+			&cart.Store_Id); err != nil && sql.ErrNoRows != nil {
+			return nil, err
+		}
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		carts = append(carts, cart)
+	}
+
+	return carts, nil
+}

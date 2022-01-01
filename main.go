@@ -43,15 +43,16 @@ func main() {
 	fmt.Println("Database Succesfully Connected")
 
 	/*Endpoint*/
-	http.HandleFunc("/show", transport.ShowCarts)
+	//
 	http.HandleFunc("/insert/cart", transport.PostCart)
-	http.HandleFunc("/getproduk", transport.GetDataProduk)
+	//	http.HandleFunc("/getproduk", transport.GetDataProduk)
 	//	http.HandleFunc("/insert/cart", transport.PostCart)
 
 	/*MENAMBAHKAN PRODUCT KE DALAM CART*/
 	http.HandleFunc("/insert/producttocart", transport.AddProductToCart)
 
 	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
+	http.HandleFunc("/cart", transport.GetCartUser)
 
 	/*DELETE PER CARTS*/
 	http.HandleFunc("/delete/cart", transport.DelCartsReq)
