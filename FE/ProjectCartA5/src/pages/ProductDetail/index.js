@@ -35,7 +35,8 @@ class ProductDetail extends Component {
     }
 
     addToCart = () => {
-        const { jumlah, varian } = this.state;
+        const { jumlah, varian, product } = this.state;
+       
 
         getData('user').then((res) => {
             if(res) {
@@ -44,12 +45,20 @@ class ProductDetail extends Component {
                     uid: res.uid
                 })
 
-                //validasi form product
-                if(jumlah && varian) {
-                    //hubungkan ke action (CartAction/masukCart)
-                    this.props.dispatch(masukCart(this.state));
+                //checking availability
+                if(product.stok == 0) {
+                    Alert.alert('SOLD OUT', 'The product you selected is out of stock, please choose another product..!');
+                }else if(jumlah > product.stok){
+                    Alert.alert('SOLD OUT', 'The quantity of product you chosee exceeds the stock limit, please choose according to available stock..!');
                 }else {
-                    Alert.alert('Error', 'Quantity and Variant cannot be empty, please enter again..!');
+
+                    //validasi form product
+                    if(jumlah && varian) {
+                        //hubungkan ke action (CartAction/masukCart)
+                        this.props.dispatch(masukCart(this.state));
+                    }else {
+                        Alert.alert('Error', 'Quantity and Variant cannot be empty, please enter again..!');
+                    }
                 }
             } else {
                 Alert.alert('Error', 'Silahkan Login Terlebih Dahulu');
