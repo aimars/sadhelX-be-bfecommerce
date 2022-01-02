@@ -94,6 +94,8 @@ class ProductDetail extends Component {
                         />
                     </View>
                     <Jarak height={180}/>
+                    
+                    {/* cek kondisi stok */}
                     <Tombol 
                         title="Add to Cart"
                         type="text"

@@ -1,12 +1,10 @@
 //untuk percobaan
 import React, { Component } from 'react'
 import { StyleSheet, View, Text, ScrollView } from 'react-native'
-import HeaderComponent from '../../components/besar/HeaderComponent'
 import { colors, fonts } from '../../utils'
-import { ListProduct } from '../../components'
+import { HeaderComponent, ListProduct, Tombol, Jarak } from '../../components'
 import { getListProduct } from '../../actions/ProductAction'
 import { connect } from 'react-redux'
-import { Tombol, Jarak } from '../../components/kecil'
 
 class Home extends Component {
 

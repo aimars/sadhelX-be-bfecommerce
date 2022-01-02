@@ -26,6 +26,7 @@ const CartCard = ({cart, cartUtama, id, dispatch}) => {
 
                 <Text style={styles.text}>Quantity : {cart.jumlahOrder}</Text>
                 <Text style={styles.text}>Variant : {cart.varian}</Text>
+                <Text style={styles.text}>Total Price : Rp. {numberWithCommas(cart.totalHarga)}</Text>
 
                 {/* {<View >
                     <Inputan label="Quantity" value={cart.jumlahOrder}/>
