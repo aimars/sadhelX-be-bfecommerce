@@ -9,7 +9,8 @@ import Inputan from '../Inputan'
 import { connect } from 'react-redux'
 import { removeCart } from '../../../actions/CartAction'
 
-const CartCard = ({cart, cartUtama, id, dispatch}) => {
+const CartCard = ({cart, cartUtama, id, dispatch, navigation}) => {
+
 
     const hapusCart = () => {
         dispatch(removeCart(id, cartUtama, cart))
@@ -18,7 +19,9 @@ const CartCard = ({cart, cartUtama, id, dispatch}) => {
         <View style={styles.container}>
             <Image source={{ uri : cart.product.gambar[0]} } style={styles.gambar}/>
             <View>
-                <Text style={styles.nama}>{cart.product.nama}</Text>
+                <Text style={styles.nama}>
+                    {cart.product.nama}
+                </Text>
                 <Text style={styles.text}>Rp. {numberWithCommas(cart.product.harga)}</Text>
                 <Text style={styles.text}>Stock : {cart.product.stok}</Text>
                 <Jarak height={14} />
@@ -26,9 +29,16 @@ const CartCard = ({cart, cartUtama, id, dispatch}) => {
                 <Text style={styles.text}>Quantity : {cart.jumlahOrder}</Text>
                 <Text style={styles.text}>Variant : {cart.varian}</Text>
                 <Text style={styles.text}>Total Price : Rp. {numberWithCommas(cart.totalHarga)}</Text>
+                <TouchableOpacity >
+                    <Text style={styles.editCart}>Edit</Text>
+                </TouchableOpacity>
+                
 
-                {/* {<View >
-                    <Inputan label="Quantity" value={cart.jumlahOrder}/>
+                {/* <View >
+                    <Inputan label="Quantity" value={cart.jumlahOrder}
+                        onChangeText={(jumlah) => this.setState({jumlah})}
+                        keyboardType="number-pad"
+                    />
                     <Pilihan 
                         label="Variant" 
                         width={responsiveWidth(166)}
@@ -36,8 +46,9 @@ const CartCard = ({cart, cartUtama, id, dispatch}) => {
                         fontSize={14} 
                         datas={cart.product.varian}
                     />
-                </View>} */}
+                </View> */}
             </View>
+            
 
             <TouchableOpacity style={styles.remove} onPress={() => hapusCart()}>
                 <IconRemove />
@@ -90,5 +101,10 @@ const styles = StyleSheet.create({
     },
     wrapperPilihan: {
         flexDirection: 'row',
+    },
+    editCart: {
+        fontFamily: fonts.primary.bold,
+        fontSize: 16,
+        color: colors.primary,
     }
 })

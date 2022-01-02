@@ -73,6 +73,7 @@ export const masukCart = (data) => {
 }
 
 export const masukCartDetail = (data) => {
+
     return (dispatch) => {
         const orders = {
             product: data.product,
@@ -83,14 +84,28 @@ export const masukCartDetail = (data) => {
         };
 
         //pengecekan orderID
+        // FIREBASE.database()
+        //     .ref('carts/'+data.uid)
+        //     .child('orders')
+        //     .once('value', (querySnapshot) => {
 
+        //         console.log("ID ORDER : ", querySnapshot.val());
+
+        //     })
+        //     .catch((error) => {
+        //         dispatchError(dispatch, MASUK_CART, error);
+        //         alert(error);
+        //     })
+                
+        
+//////////////////////////////////
         FIREBASE.database()
             .ref('carts/'+data.uid)
             .child('orders')
             .push(orders)
             .then((response) => {
 
-                //console.log("Simpan cart detail", response);
+                // console.log("Simpan cart detail", response);
 
                 dispatchSuccess(dispatch, MASUK_CART, response ? response : []);
             })
