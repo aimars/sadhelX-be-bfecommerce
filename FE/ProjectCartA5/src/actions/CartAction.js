@@ -82,6 +82,8 @@ export const masukCartDetail = (data) => {
             varian: data.varian
         };
 
+        //pengecekan orderID
+
         FIREBASE.database()
             .ref('carts/'+data.uid)
             .child('orders')

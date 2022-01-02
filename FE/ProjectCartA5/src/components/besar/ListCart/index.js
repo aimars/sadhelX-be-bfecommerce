@@ -3,7 +3,7 @@
 import React from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { colors } from '../../../utils'
+import { fonts, colors } from '../../../utils'
 import { CartCard } from '../../kecil'
 
 const ListCart = ({getListCartLoading, getListCartResult, getListCartError}) => {
@@ -28,7 +28,12 @@ const ListCart = ({getListCartLoading, getListCartResult, getListCartError}) => 
                 ) : getListCartError ? (
                     <Text>{getListCartError}</Text>
                 ) : (
-                    <Text>Data Kosong</Text>
+                    //Anda belum belaja
+                    <View style={styles.containerKosong}>
+                        <Text style={styles.cartKosong}>Your Cart is Empty . . .</Text>
+                        <Text style={styles.cartKosong}>Please Add a Product First</Text>
+                    </View>
+                    
                 )}
             </View>
         </ScrollView>
@@ -45,5 +50,14 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 10,
         marginBottom: 30
+    },
+    containerKosong: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginTop: 250,
+    },
+    cartKosong: {
+        fontFamily: fonts.primary.regular,
+        fontSize: 14,
     }
 })
