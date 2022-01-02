@@ -48,7 +48,7 @@ class ProductDetail extends Component {
                 //checking availability
                 if(product.stok == 0) {
                     Alert.alert('SOLD OUT', 'The product you selected is out of stock, please choose another product..!');
-                }else if(jumlah > product.stok){
+                }else if(parseInt(jumlah) > product.stok){
                     Alert.alert('SOLD OUT', 'The quantity of product you chosee exceeds the stock limit, please choose according to available stock..!');
                 }else {
 
@@ -61,7 +61,7 @@ class ProductDetail extends Component {
                     }
                 }
             } else {
-                Alert.alert('Error', 'Silahkan Login Terlebih Dahulu');
+                Alert.alert('Error', 'Please Login First . . .');
                 this.props.navigation.replace("Login") //untuk mengembalikan ke halaman login
             }
         })

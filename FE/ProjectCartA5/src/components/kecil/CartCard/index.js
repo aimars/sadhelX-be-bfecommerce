@@ -14,7 +14,6 @@ const CartCard = ({cart, cartUtama, id, dispatch}) => {
     const hapusCart = () => {
         dispatch(removeCart(id, cartUtama, cart))
     }
-
     return (
         <View style={styles.container}>
             <Image source={{ uri : cart.product.gambar[0]} } style={styles.gambar}/>
