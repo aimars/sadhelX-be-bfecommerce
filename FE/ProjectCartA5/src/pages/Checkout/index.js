@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, ScrollView, View } from 'react-native'
 import { CardAlamat, Jarak, Pilihan, Tombol } from '../../components';
 import { colors, fonts, getData, numberWithCommas, responsiveHeight } from "../../utils";
 import { ListCart } from '../../components' //
 import { connect } from 'react-redux';
 import { getKotaDetail, postOngkir } from '../../actions/RajaOngkirAction'
 import { couriers } from '../../data'
+import { CardDetailTransProduct } from '../../components'
 
 
 class Checkout extends Component {
@@ -77,17 +78,37 @@ class Checkout extends Component {
     }
     
     render() {
+        const { getListCartResult } = this.props;
         const { profile, ekspedisi, totalHarga, totalBerat, alamat, kota, provinsi, ekspedisiSelected, ongkir, estimasi } = this.state;
         //console.log("Profile : ", profile);
 
         return (
-            <View style={styles.pages}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.pages}>
                 <View style={styles.isi}>
                     <Text style={styles.textBold}>Delevery Address</Text>
                     <CardAlamat profile={profile} alamat={alamat} provinsi={provinsi} kota={kota}/>
 
                     <Jarak height={20}/>
-                    {/* <Text style={styles.textBold}>Products</Text> */}
+                    <Text style={styles.textBold}>Products</Text>
+                    <View>
+                        {getListCartResult ? (
+                            Object.keys(getListCartResult.orders).map((key) => {
+                                return (
+                                    <CardDetailTransProduct
+                                        cart={getListCartResult.orders[key]} 
+                                    />
+                                );
+                            })
+                        ) : (
+                            //Anda belum belaja
+                            <View style={styles.containerKosong}>
+                                <Text style={styles.cartKosong}>Your Cart is Empty . . .</Text>
+                                <Text style={styles.cartKosong}>Please Add a Product First</Text>
+                            </View>
+                            
+                        )}
+                    </View>
 
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Sub Total :</Text>
@@ -126,6 +147,7 @@ class Checkout extends Component {
                     />
                  </View>
             </View>
+            </ScrollView>
         )
     }
 }
@@ -134,7 +156,9 @@ const mapStateToProps = (state) => ({
     getKotaDetailLoading: state.RajaOngkirReducer.getKotaDetailLoading,
     getKotaDetailResult: state.RajaOngkirReducer.getKotaDetailResult,
     getKotaDetailError: state.RajaOngkirReducer.getKotaDetailError,
-    ongkirResult: state.RajaOngkirReducer.ongkirResult
+    ongkirResult: state.RajaOngkirReducer.ongkirResult,
+
+    getListCartResult: state.CartReducer.getListCartResult,
 })
 
 export default connect(mapStateToProps, null)(Checkout)
@@ -178,5 +202,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 6.84,
         elevation: 11,
+    },
+    container: {
+       // marginVertical: 5,
     },
 })
