@@ -36,7 +36,6 @@ class ProductDetail extends Component {
 
     addToCart = () => {
         const { jumlah, varian, product } = this.state;
-       
 
         getData('user').then((res) => {
             if(res) {
@@ -50,6 +49,8 @@ class ProductDetail extends Component {
                     Alert.alert('SOLD OUT', 'The product you selected is out of stock, please choose another product..!');
                 }else if(parseInt(jumlah) > product.stok){
                     Alert.alert('SOLD OUT', 'The quantity of product you chosee exceeds the stock limit, please choose according to available stock..!');
+                }else if(parseInt(jumlah) == 0){
+                    Alert.alert('Error', 'The quantity added is at least one..!');
                 }else {
 
                     //validasi form product
@@ -125,6 +126,7 @@ const mapStateToProps = (state) => ({
     saveCartLoading: state.CartReducer.saveCartLoading,
     saveCartResult: state.CartReducer.saveCartResult,
     saveCartError: state.CartReducer.saveCartError,
+    getListCartResult: state.CartReducer.getListCartResult
 })
 
 export default connect(mapStateToProps, null)(ProductDetail)

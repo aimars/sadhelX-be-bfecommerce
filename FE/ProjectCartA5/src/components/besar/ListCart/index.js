@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { fonts, colors } from '../../../utils'
 import { CartCard } from '../../kecil'
 
-const ListCart = ({getListCartLoading, getListCartResult, getListCartError}) => {
+const ListCart = ({getListCartLoading, getListCartResult, getListCartError, navigation}) => {
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
@@ -18,6 +18,7 @@ const ListCart = ({getListCartLoading, getListCartResult, getListCartError}) => 
                                 cartUtama={getListCartResult} 
                                 key={key}
                                 id={key}
+                                navigation={navigation}
                             />
                         );
                     })
@@ -31,7 +32,7 @@ const ListCart = ({getListCartLoading, getListCartResult, getListCartError}) => 
                     //Anda belum belaja
                     <View style={styles.containerKosong}>
                         <Text style={styles.cartKosong}>Your Cart is Empty . . .</Text>
-                        <Text style={styles.cartKosong}>Please Add a Product First</Text>
+                        <Text style={styles.cartKosong}>Please Add A Product First</Text>
                     </View>
                     
                 )}

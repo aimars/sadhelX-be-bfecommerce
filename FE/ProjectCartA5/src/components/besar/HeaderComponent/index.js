@@ -19,7 +19,7 @@ class HeaderComponent extends Component {
 
     render() {
         const {navigation, getListCartResult} = this.props
-
+        // console.log("Cek:", Object.keys(getListCartResult.orders[key]));
         let totalCart;
         if(getListCartResult) {
             totalCart = Object.keys(getListCartResult.orders).length

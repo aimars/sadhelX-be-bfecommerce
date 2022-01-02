@@ -38,12 +38,12 @@ class Cart extends Component {
     }
 
     render() {
-        const { getListCartResult } = this.props;
+        const { getListCartResult, getListProductResult, navigation } = this.props;
         
         //console.log("Data Cart : ", this.props.getListCartResult);
         return (
             <View style={styles.page}>
-                <ListCart {...this.props}/>
+                <ListCart {...this.props }/>
                 <View style={styles.footer}>
                     <View style={styles.subTotal}>
                         <Text style={styles.textBold}>Sub Total :</Text>
@@ -80,6 +80,8 @@ const mapStateToProps = (state) => ({
     removeCartLoading: state.CartReducer.removeCartLoading,
     removeCartResult: state.CartReducer.removeCartResult,
     removeCartError: state.CartReducer.removeCartError,
+
+    getListProductResult: state.ProductReducer.getListProductResult,
 })
 
 export default connect(mapStateToProps, null)(Cart)
