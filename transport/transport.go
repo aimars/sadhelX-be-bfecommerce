@@ -20,13 +20,7 @@ import (
 	"github.com/subchen/go-curl"
 )
 
-// const (
-// 	host     = "103.157.96.115"
-// 	port     = 5432
-// 	user     = "rantaipolygon"
-// 	password = "whirlpool"
-// 	dbname   = "db_rantaipolygon"
-// )
+
 
 const (
 	layoutDateTime = "2006-01-02 15:04:05"
@@ -44,15 +38,7 @@ var crt interface{}
 
 var db *sql.DB
 
-// type carts struct {
-// 	cart_id          int
-// 	status           string
-// 	checkout_date    string
-// 	payment_date     string
-// 	user_id          int
-// 	transaction_code string
-// 	payment_method   string
-// }
+
 
 type AphService interface {
 	HelloWorldService(context.Context, string) string
@@ -118,14 +104,7 @@ func RegisterHttpsServicesAndStartListener() {
 	http.Handle("/HelloWorld", HelloWorldHandler)
 }
 
-// func Response_Show_Carts(w http.ResponseWriter, r *http.Request) {
-// 	fmt.Println("Tes show doang")
-// }
 
-// func Handle_Show_Carts() {
-// 	myRouter := mux.NewRouter().StrictSlash(true)
-// 	myRouter.HandleFunc("Carts", Response_Show_Carts).Methods("GET")
-// }
 
 func Text() {
 	fmt.Println("Hello")
@@ -204,33 +183,8 @@ func Delete(ctx context.Context, cart datastruct.CartsFields) error {
 	return nil
 }
 
-func DeleteMahasiswa(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "DELETE" {
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		var cart datastruct.CartsFields
-		id := r.URL.Query().Get("id")
-		if id == "" {
-			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
-			return
-		}
-		cart.Cart_Id, _ = strconv.Atoi(id)
-
-		if err := Delete(ctx, cart); err != nil {
-			kesalahan := map[string]string{
-				"error": fmt.Sprintf("%v", err),
-			}
-			ResponseJSON(w, kesalahan, http.StatusInternalServerError)
-			return
-		}
-
-		http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
-		return
-
-	}
 }
-
+}
 func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		ctx, cancel := context.WithCancel(context.Background())
@@ -290,18 +244,7 @@ func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 			return nil, err
 		}
 
-		//  Change format string to datetime for created_at and updated_at
-		//	cart.Checkout_Date, err = time.Parse(layoutDateTime, Checkout_Date)
-
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
-		// cart.Payment_Date, err = time.Parse(layoutDateTime, Payment_Date)
-
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+		
 
 		carts = append(carts, cart)
 	}
