@@ -1,14 +1,15 @@
 package main
 
 import (
-	"aph-go-service/transport"
 	"database/sql"
 	_ "expvar"
 	"fmt"
 	"net/http"
 	"os"
+	"sadhelX-be-bfecommerce/transport"
 
 	"github.com/go-kit/kit/log"
+	"github.com/gorilla/mux"
 
 	_ "github.com/lib/pq"
 )
@@ -43,40 +44,42 @@ func main() {
 	fmt.Println("Database Succesfully Connected")
 
 	/*Endpoint*/
-	//
-	http.HandleFunc("/insert/cart", transport.PostCart)
 	//	http.HandleFunc("/getproduk", transport.GetDataProduk)
 	//	http.HandleFunc("/insert/cart", transport.PostCart)
+	// http.HandleFunc("/insert/cart", transport.PostCart)
 
+	r := mux.NewRouter()
 	/*MENAMBAHKAN PRODUCT KE DALAM CART*/
-	http.HandleFunc("/insert/producttocart", transport.AddProductToCart)
+	r.HandleFunc("/product/cart", transport.AddProductToCart)
 
 	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
-	http.HandleFunc("/cart", transport.GetCartUser)
+	r.HandleFunc("/cart/user/{id}", transport.GetCartUser)
 
 	/*DELETE PER CARTS*/
-	http.HandleFunc("/delete/cart", transport.DelCartsReq)
+	r.HandleFunc("/cart/{id}", transport.DelCartsReq)
 
 	/*DELETE PER PRODUCTS*/
-	http.HandleFunc("/delete/product", transport.DeletePerProductFromCart)
+	r.HandleFunc("/cart/product/order/{id}", transport.DeletePerProductFromCart)
 
 	/*UPDATE COLOR PRODUCT*/
-	http.HandleFunc("/update/color", transport.UpdateColor)
+	r.HandleFunc("/cart/product/order/{id}/color", transport.UpdateColor)
 
 	/*UPDATE SIZE PRODUCT*/
-	http.HandleFunc("/update/size", transport.UpdateSize)
+	r.HandleFunc("/cart/product/order/{id}/size", transport.UpdateSize)
 
 	/*MENAMBAH QTY +1*/
-	http.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
+	r.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
 
 	/*MENGURANGI QTY -1*/
-	http.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
+	r.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
 
 	/*MENGATUR JUMLAH QTY YANG DIINPUTKAN OLEH USER*/
 
 	/*========== PROSES CHECKOUT =============*/
 	/*MEMASUKKAN CART KE CHECKOUT*/
-	http.HandleFunc("/checkout", transport.Checkout)
+	r.HandleFunc("/cart/{id}/checkout", transport.Checkout)
+
+	http.Handle("/", r)
 
 	logger := log.NewLogfmtLogger(os.Stdout)
 

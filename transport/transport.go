@@ -10,17 +10,16 @@ import (
 	"net/http"
 	"strconv"
 
-	"aph-go-service/datastruct"
-	"aph-go-service/logging"
-	"aph-go-service/service"
+	"sadhelX-be-bfecommerce/datastruct"
+	"sadhelX-be-bfecommerce/logging"
+	"sadhelX-be-bfecommerce/service"
 
 	"github.com/go-kit/kit/endpoint"
 	httptransport "github.com/go-kit/kit/transport/http"
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/subchen/go-curl"
 )
-
-
 
 const (
 	layoutDateTime = "2006-01-02 15:04:05"
@@ -31,14 +30,12 @@ const (
 	port     = 5432
 	user     = "postgres"
 	password = "giansa"
-	dbname   = "CartsDatabase"
+	dbname   = "DatabaseCarts"
 )
 
 var crt interface{}
 
 var db *sql.DB
-
-
 
 type AphService interface {
 	HelloWorldService(context.Context, string) string
@@ -104,8 +101,6 @@ func RegisterHttpsServicesAndStartListener() {
 	http.Handle("/HelloWorld", HelloWorldHandler)
 }
 
-
-
 func Text() {
 	fmt.Println("Hello")
 }
@@ -160,31 +155,6 @@ func ConnDB() (*sql.DB, error) {
 	return db, nil
 }
 
-func Delete(ctx context.Context, cart datastruct.CartsFields) error {
-	db, err := ConnDB()
-
-	if err != nil {
-		fmt.Sprintf("cant connect to database")
-	}
-
-	queryText := fmt.Sprintf("delete from carts where cart_id = '%d'", cart.Cart_Id)
-
-	s, err := db.ExecContext(ctx, queryText)
-
-	if err != nil && err != sql.ErrNoRows {
-		return err
-	}
-
-	check, err := s.RowsAffected()
-	fmt.Println(check)
-	if check == 0 {
-		return errors.New("id tidak ada")
-	}
-	return nil
-}
-
-}
-}
 func ShowCarts(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		ctx, cancel := context.WithCancel(context.Background())
@@ -244,7 +214,18 @@ func GetAll(ctx context.Context) ([]datastruct.CartsFields, error) {
 			return nil, err
 		}
 
-		
+		//  Change format string to datetime for created_at and updated_at
+		//	cart.Checkout_Date, err = time.Parse(layoutDateTime, Checkout_Date)
+
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		// cart.Payment_Date, err = time.Parse(layoutDateTime, Payment_Date)
+
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
 		carts = append(carts, cart)
 	}
@@ -338,10 +319,21 @@ func AddProductToCart(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		//id := r.URL.Query().Get("id")
+
+		vars := mux.Vars(r)
+		key := vars["id"]
+
+		if key == "" {
+			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+			return
+		}
+
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
 		var mixco datastruct.MixCartOrder
+		mixco.User_Id, _ = strconv.Atoi(key)
 
 		if err := json.NewDecoder(r.Body).Decode(&mixco); err != nil {
 			ResponseJSON(w, err, http.StatusBadRequest)
@@ -396,14 +388,15 @@ func DelCartsReq(w http.ResponseWriter, r *http.Request) {
 
 		var cartdel datastruct.MixCartOrder
 
-		id_cart := r.URL.Query().Get("id_cart")
+		vars := mux.Vars(r)
+		key := vars["id"]
 
-		if id_cart == "" {
+		if key == " " {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		cartdel.Cart_Id, _ = strconv.Atoi(id_cart)
 
+		cartdel.Cart_Id, _ = strconv.Atoi(key)
 		if err := DeleteCart(ctx, cartdel); err != nil {
 
 			kesalahan := map[string]string{
@@ -434,7 +427,7 @@ func DeleteCart(ctx context.Context, cartdel datastruct.MixCartOrder) error {
 		log.Fatal("Can't connect to database", err)
 	}
 
-	queryText := fmt.Sprintf("call delete_percart(%v)", cartdel.Cart_Id)
+	queryText := fmt.Sprintf("call delete_percart('%d')", cartdel.Cart_Id)
 	fmt.Println(queryText)
 	s, err := db.ExecContext(ctx, queryText)
 
@@ -444,8 +437,8 @@ func DeleteCart(ctx context.Context, cartdel datastruct.MixCartOrder) error {
 
 	check, err := s.RowsAffected()
 
-	if check < 1 {
-		return errors.New("id tidak ada ")
+	if check != 0 {
+		return errors.New("Failed Deleted")
 	}
 
 	return nil
@@ -540,13 +533,16 @@ func UpdateQtyPlusOne(w http.ResponseWriter, r *http.Request) {
 
 		var ortem datastruct.OrderItemsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
 
-		if id == "" {
+		vars := mux.Vars(r)
+		key := vars["id"]
+
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		ortem.Oritem_id, _ = strconv.Atoi(id)
+		ortem.Oritem_id, _ = strconv.Atoi(key)
 
 		if err := UpdateQuantityPlusOne(ctx, ortem); err != nil {
 			kesalahan := map[string]string{
@@ -602,13 +598,16 @@ func UpdateQtyMinusOne(w http.ResponseWriter, r *http.Request) {
 
 		var ortem datastruct.OrderItemsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
 
-		if id == "" {
+		vars := mux.Vars(r)
+		key := vars["id"]
+
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		ortem.Oritem_id, _ = strconv.Atoi(id)
+		ortem.Oritem_id, _ = strconv.Atoi(key)
 
 		if err := UpdateQuantityMinusOne(ctx, ortem); err != nil {
 			kesalahan := map[string]string{
@@ -669,13 +668,15 @@ func UpdateColor(w http.ResponseWriter, r *http.Request) {
 
 		var ortem datastruct.OrderItemsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
+		vars := mux.Vars(r)
+		key := vars["id"]
 
-		if id == "" {
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		ortem.Oritem_id, _ = strconv.Atoi(id)
+		ortem.Oritem_id, _ = strconv.Atoi(key)
 
 		if err := json.NewDecoder(r.Body).Decode(&ortem); err != nil {
 			ResponseJSON(w, err, http.StatusBadRequest)
@@ -741,13 +742,15 @@ func UpdateSize(w http.ResponseWriter, r *http.Request) {
 
 		var ortem datastruct.OrderItemsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
+		vars := mux.Vars(r)
+		key := vars["id"]
 
-		if id == "" {
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		ortem.Oritem_id, _ = strconv.Atoi(id)
+		ortem.Oritem_id, _ = strconv.Atoi(key)
 
 		if err := json.NewDecoder(r.Body).Decode(&ortem); err != nil {
 			ResponseJSON(w, err, http.StatusBadRequest)
@@ -808,13 +811,15 @@ func DeletePerProductFromCart(w http.ResponseWriter, r *http.Request) {
 
 		var ortem datastruct.OrderItemsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
+		vars := mux.Vars(r)
+		key := vars["id"]
 
-		if id == "" {
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		ortem.Oritem_id, _ = strconv.Atoi(id)
+		ortem.Oritem_id, _ = strconv.Atoi(key)
 
 		if err := DeletePerProductFromCartSql(ctx, ortem); err != nil {
 			kesalahan := map[string]string{
@@ -943,13 +948,15 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 
 		var cart datastruct.CartsFields
 
-		id := r.URL.Query().Get("id")
+		//id := r.URL.Query().Get("id")
+		vars := mux.Vars(r)
+		key := vars["id"]
 
-		if id == "" {
+		if key == "" {
 			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
 			return
 		}
-		cart.Cart_Id, _ = strconv.Atoi(id)
+		cart.Cart_Id, _ = strconv.Atoi(key)
 
 		if err := json.NewDecoder(r.Body).Decode(&cart); err != nil {
 			ResponseJSON(w, err, http.StatusBadRequest)
@@ -1003,17 +1010,19 @@ func GetCartUser(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithCancel(context.Background())
 
 		defer cancel()
-		var id int
-		iduser := r.URL.Query().Get("iduser")
+		var keyy int
+		//user_id := r.URL.Query().Get("user_id")
 
-		if iduser == "" {
-			ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
-			return
-		}
+		// if user_id == "" {
+		// 	ResponseJSON(w, "id tidak boleh kosong", http.StatusBadRequest)
+		// 	return
+		// }
 
-		id, _ = strconv.Atoi(iduser)
-
-		crt, err := GetAllCartUser(ctx, id)
+		// id, _ = strconv.Atoi(user_id)
+		vars := mux.Vars(r)
+		key := vars["id"]
+		keyy, _ = strconv.Atoi(key)
+		crt, err := GetAllCartUser(ctx, keyy)
 
 		if err != nil {
 			kesalahan := map[string]string{
@@ -1079,3 +1088,58 @@ func GetAllCartUser(ctx context.Context, iduser int) ([]datastruct.MixCartOrder,
 
 	return carts, nil
 }
+
+/*========================================== GET product ===========================================*/
+// func AddProductCart(w http.ResponseWriter, r *http.Request) {
+// 	if r.Method == "POST" {
+
+// 		if r.Header.Get("Content-Type") != "application/json" {
+// 			http.Error(w, "Gunakan content type application / json", http.StatusBadRequest)
+// 			return
+// 		}
+
+// 		ctx, cancel := context.WithCancel(context.Background())
+// 		defer cancel()
+
+// 		var mixco datastruct.MixCartOrder
+
+// 		if err := json.NewDecoder(r.Body).Decode(&mixco); err != nil {
+// 			ResponseJSON(w, err, http.StatusBadRequest)
+// 			return
+// 		}
+
+// 		//	, order_item
+// 		if err := InsertProductCart(ctx, mixco); err != nil {
+// 			ResponseJSON(w, err, http.StatusInternalServerError)
+// 			return
+// 		}
+
+// 		res := map[string]string{
+// 			"status": "Succesfully",
+// 		}
+
+// 		ResponseJSON(w, res, http.StatusCreated)
+
+// 		return
+// 	}
+
+// 	http.Error(w, "Tidak di ijinkan", http.StatusMethodNotAllowed)
+// 	return
+// }
+
+// func InsertProductCart(ctx context.Context, mixco datastruct.MixCartOrder) error {
+// 	//, ortem datastruct.OrderItemsFields
+// 	db, err := ConnDB()
+
+// 	if err != nil {
+// 		fmt.Printf("cannot connect db")
+// 	}
+// 	/*%v bisa untuk segala jenis data*/
+
+// 	query := db.QueryRow("call actionfirst_insert_product($1,$2,$3,$4,$5,$6)", mixco.Product_Id, mixco.Qty, mixco.Color, mixco.Psize, mixco.Store_Id, mixco.User_Id)
+// 	if query != nil {
+// 		fmt.Printf("success")
+// 	}
+
+// 	return nil
+// }
