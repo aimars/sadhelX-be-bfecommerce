@@ -6,5 +6,6 @@ import CartCard from "./CartCard";
 import CardProducts from "./CardProducts";
 import CardAlamat from "./CardAlamat";
 import CardDetailTransProduct from "./CardDetailTransProduct";
+import EditCart from "./EditCart";
 
-export { Tombol, Jarak, Pilihan, Inputan, CartCard, CardProducts, CardAlamat, CardDetailTransProduct }
+export { Tombol, Jarak, Pilihan, Inputan, CartCard, CardProducts, CardAlamat, CardDetailTransProduct, EditCart }

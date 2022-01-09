@@ -1,8 +1,8 @@
 //component tiap item
 
 import React from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { Jarak, Pilihan } from '../../kecil'
+import { StyleSheet, Text, View, Image, TouchableOpacity, useState } from 'react-native'
+import { Jarak, Pilihan, EditCart } from '../../kecil'
 import { IconRemove } from '../../../assets'
 import { colors, fonts, numberWithCommas, responsiveHeight, responsiveWidth } from '../../../utils'
 import Inputan from '../Inputan'
@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 import { removeCart } from '../../../actions/CartAction'
 
 const CartCard = ({cart, cartUtama, id, dispatch, navigation}) => {
-
 
     const hapusCart = () => {
         dispatch(removeCart(id, cartUtama, cart))
@@ -26,27 +25,15 @@ const CartCard = ({cart, cartUtama, id, dispatch, navigation}) => {
                 <Text style={styles.text}>Stock : {cart.product.stok}</Text>
                 <Jarak height={14} />
 
-                <Text style={styles.text}>Quantity : {cart.jumlahOrder}</Text>
-                <Text style={styles.text}>Variant : {cart.varian}</Text>
+                {/* <Text style={styles.text}>Quantity : {cart.jumlahOrder}</Text>
+                <Text style={styles.text}>Variant : {cart.varian}</Text> */}
+                <EditCart jumlah={cart.jumlahOrder} varian={cart.product.varian} selectedVarian={cart.varian}/>
+                <Jarak height={5} />
                 <Text style={styles.text}>Total Price : Rp. {numberWithCommas(cart.totalHarga)}</Text>
-                <TouchableOpacity >
-                    <Text style={styles.editCart}>Edit</Text>
-                </TouchableOpacity>
                 
-
-                {/* <View >
-                    <Inputan label="Quantity" value={cart.jumlahOrder}
-                        onChangeText={(jumlah) => this.setState({jumlah})}
-                        keyboardType="number-pad"
-                    />
-                    <Pilihan 
-                        label="Variant" 
-                        width={responsiveWidth(166)}
-                        height={responsiveHeight(43)} 
-                        fontSize={14} 
-                        datas={cart.product.varian}
-                    />
-                </View> */}
+                {/* <TouchableOpacity >
+                    <Text style={styles.editCart}>Edit</Text>
+                </TouchableOpacity> */}
             </View>
             
 

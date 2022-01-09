@@ -5,5 +5,6 @@ import Checkout from "./Checkout"
 import Login from "./Login"
 import Register1 from "./Register/Register1"
 import Register2 from "./Register/Register2"
+import Midtrans from './Midtrans'
 
-export { Home, Cart, ProductDetail, Checkout, Login, Register1, Register2 }
+export { Home, Cart, ProductDetail, Checkout, Login, Register1, Register2, Midtrans }

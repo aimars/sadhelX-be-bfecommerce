@@ -4,3 +4,9 @@ apiKey: "AIzaSyBsUuN8jrumbROpt5J89Zt2b-lR28s5484",
   storageBucket: "projectcarta5.appspot.com",
   messagingSenderId: "280974883891",
   appId: "1:280974883891:web:fd750ad22d516c7601b746"
+
+--Server Key MIDTRANS
+SB-Mid-server-7kx9bawllbS2wmfb3aWRBdjI
+
+--Hasil Endcode MIDTRANS
+U0ItTWlkLXNlcnZlci03a3g5YmF3bGxiUzJ3bWZiM2FXUkJkakk=
