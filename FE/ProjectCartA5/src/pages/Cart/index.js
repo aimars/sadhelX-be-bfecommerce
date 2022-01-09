@@ -8,6 +8,14 @@ import { getListCart } from '../../actions/CartAction'
 
 
 class Cart extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            jumlah: '',
+            varian: [],
+        }
+    }
 
     componentDidMount() {
         getData('user').then((res) => {
@@ -39,6 +47,7 @@ class Cart extends Component {
 
     render() {
         const { getListCartResult, getListProductResult, navigation } = this.props;
+        const { jumlah, varian } = this.state;
         
         //console.log("Data Cart : ", this.props.getListCartResult);
         return (
