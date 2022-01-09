@@ -50,7 +50,7 @@ func main() {
 
 	r := mux.NewRouter()
 	/*MENAMBAHKAN PRODUCT KE DALAM CART*/
-	r.HandleFunc("/product/cart", transport.AddProductToCart)
+	r.HandleFunc("user/{id}/product/cart", transport.AddProductToCart)
 
 	/*MENAMPILKAN SELURUH ISI CARTS / USER*/
 	r.HandleFunc("/cart/user/{id}", transport.GetCartUser)
@@ -68,10 +68,10 @@ func main() {
 	r.HandleFunc("/cart/product/order/{id}/size", transport.UpdateSize)
 
 	/*MENAMBAH QTY +1*/
-	r.HandleFunc("/addqty", transport.UpdateQtyPlusOne)
+	r.HandleFunc("/cart/product/order/{id}/qtyplusone", transport.UpdateQtyPlusOne)
 
 	/*MENGURANGI QTY -1*/
-	r.HandleFunc("/minusqty", transport.UpdateQtyMinusOne)
+	r.HandleFunc("/cart/product/order/{id}/qtyminusone", transport.UpdateQtyMinusOne)
 
 	/*MENGATUR JUMLAH QTY YANG DIINPUTKAN OLEH USER*/
 
